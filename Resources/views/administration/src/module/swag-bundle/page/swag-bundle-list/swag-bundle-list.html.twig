@@ -1,0 +1,15 @@
+<sw-page class="swag-bundle-list">
+    <template slot="smart-bar-actions">
+        <sw-button variant="primary">Create</sw-button>
+    </template>
+
+    <template slot="content">
+        <sw-entity-listing
+            v-if="bundles"
+            :items="bundles"
+            :repository="repository"
+            :columns="columns"
+            detailRoute="swag.bundle.detail">
+        </sw-entity-listing>
+    </template>
+</sw-page>

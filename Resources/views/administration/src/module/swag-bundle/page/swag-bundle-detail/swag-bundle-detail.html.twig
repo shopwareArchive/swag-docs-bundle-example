@@ -1,0 +1,18 @@
+<sw-page class="swag-bundle-detail">
+    <template slot="smart-bar-actions">
+        <sw-button :routerLink="{ name: 'swag.bundle.list' }">Abort</sw-button>
+        <sw-button variant="primary" @click="onClickSave">Save</sw-button>
+    </template>
+
+    <template slot="content">
+        <sw-card-view>
+            <sw-card v-if="bundle" title="General" :isLoading="isLoading">
+
+                <sw-field label="Name" v-model="bundle.name"></sw-field>
+                <sw-field label="Website" v-model="bundle.link"></sw-field>
+
+                <sw-text-editor label="Description" v-model="bundle.description"></sw-text-editor>
+            </sw-card>
+        </sw-card-view>
+    </template>
+</sw-page>
