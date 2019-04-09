@@ -1,0 +1,55 @@
+{% sw_extends '@Storefront/page/product-detail/tabs.html.twig' %}
+
+{% block page_product_detail_tabs_navigation_description %}
+    {{ parent() }}
+    {% if page.product.extension('bundles').elements|length > 0 %}
+        <li class="nav-item">
+            <a class="nav-link"
+               id="bundle-tab"
+               data-toggle="tab"
+               data-offcanvas-tab="true"
+               href="#bundle-tab-pane"
+               role="tab"
+               aria-controls="bundle-tab-pane"
+               aria-selected="true">
+                Bundles
+                <i class="fas fa-chevron-right nav-link-icon"></i>
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% block page_product_detail_tabs_content_description %}
+    {{ parent() }}
+    {% if page.product.extension('bundles').elements|length > 0 %}
+        <div class="tab-pane fade"
+             id="bundle-tab-pane"
+             role="tabpanel"
+             aria-labelledby="bundle-tab">
+            <div class="container">
+            {% for bundle in page.product.extension('bundles').elements %}
+                <h2>{{ bundle.name }}</h2>
+                    <div class="row">
+                    {% for product in bundle.products.elements %}
+                        <div class="col">
+                            {% sw_include '@Storefront/component/product/widget/box-basic.html.twig' with {'product': product} %}
+                        </div>
+                    {% endfor %}
+                    </div>
+                <div class="row justify-content-md-center">
+                    <form action="{{ path('storefront-api.checkout.cart.line-item.add', {'version': 1, 'id': bundle.id}) }}"
+                          method="post"
+                          class="buy-widget"
+                          data-add-to-cart="true">
+                        <input type="hidden" name="type" value="swagbundle"/>
+                            <button class="btn btn-primary btn-block buy-widget-submit">
+                                Buy bundle and save {{ bundle.discount }}{{ bundle.discountType == 'absolute' ? '€' : '%' }}
+                            </button>
+                    </form>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+

@@ -19,7 +19,7 @@ use ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\BundleEntity;
 
 class BundleCollector implements CollectorInterface
 {
-    public const TYPE = 'swag_bundle';
+    public const TYPE = 'swagbundle';
     public const DATA_KEY = 'swag_bundles';
     public const DISCOUNT_TYPE_ABSOLUTE = 'absolute';
     public const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
@@ -33,9 +33,6 @@ class BundleCollector implements CollectorInterface
         $this->bundleRepository = $bundleRepository;
     }
 
-    /**
-     * Triggered first to prepare the fetch definitions for the current cart
-     */
     public function prepare(StructCollection $definitions, Cart $cart, SalesChannelContext $context, CartBehavior $behavior): void
     {
         $bundleLineItems = $cart->getLineItems()->filterType(self::TYPE);
@@ -47,9 +44,6 @@ class BundleCollector implements CollectorInterface
         $definitions->add(new BundleFetchDefinition($bundleLineItems->getKeys()));
     }
 
-    /**
-     * Triggers after all collectors::prepare functions called
-     */
     public function collect(StructCollection $fetchDefinitions, StructCollection $data, Cart $cart, SalesChannelContext $context, CartBehavior $behavior): void
     {
         $bundleDefinitions = $fetchDefinitions->filterInstance(BundleFetchDefinition::class);
@@ -100,10 +94,6 @@ class BundleCollector implements CollectorInterface
         $data->set(self::DATA_KEY, $bundles);
     }
 
-    /**
-     * Triggers after all collectors::collect functions called.
-     * Enrich all line items with missing data. Each collector has to care about their different line items
-     */
     public function enrich(StructCollection $data, Cart $cart, SalesChannelContext $context, CartBehavior $behavior): void
     {
         if (!$data->has(self::DATA_KEY)) {
@@ -120,18 +110,17 @@ class BundleCollector implements CollectorInterface
 
         /** @var LineItem $bundleLineItem */
         foreach ($bundleLineItems as $bundleLineItem) {
-            // todo
-//            if ($this->isComplete($bundleLineItem)) {
-//                continue;
-//            }
+            if ($this->isComplete($bundleLineItem)) {
+                continue;
+            }
 
-            $id = $bundleLineItem->getPayload()['id'];
+            $id = $bundleLineItem->getKey();
 
             $bundle = $bundles->get($id);
 
-//            if (!$bundle) {
-//                throw new CartBundleNotFoundException($id);
-//            }
+            if(!$bundle) {
+                continue;
+            }
 
             if (!$bundleLineItem->getLabel()) {
                 $bundleLineItem->setLabel($bundle->getName());
@@ -169,4 +158,14 @@ class BundleCollector implements CollectorInterface
 
         return $discount;
     }
+
+    private function isComplete(LineItem $lineItem)
+    {
+        return $lineItem->getLabel()
+            && $lineItem->getDescription()
+            && $lineItem->getChildren() !== null
+            && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')
+            && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')->getPriceDefinition();
+    }
+
 }

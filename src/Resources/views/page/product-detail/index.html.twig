@@ -1,7 +1,9 @@
 {% sw_extends '@Storefront/page/product-detail/index.html.twig' %}
-
+{# @var page \Shopware\Storefront\Page\Product\ProductPage #}
 {% block page_product_detail_content %}
-    <div class="badge badge-primary">Bundle Product</div>
+    {% if page.product.extension('bundles').elements|length > 0 %}
+        <div class="badge badge-primary">Bundle Product</div>
+    {% endif %}
 
     {{ parent() }}
 

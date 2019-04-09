@@ -37,6 +37,5 @@
             <argument id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator" type="service"/>
         </service>
 
-
     </services>
 </container>
