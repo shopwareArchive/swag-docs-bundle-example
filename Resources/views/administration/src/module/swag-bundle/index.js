@@ -1,6 +1,7 @@
 import { Module } from 'src/core/shopware';
 import './page/swag-bundle-list';
 import './page/swag-bundle-detail';
+import './page/swag-bundle-create';
 
 Module.register('swag-bundle', {
     type: 'plugin',
@@ -23,6 +24,12 @@ Module.register('swag-bundle', {
                 default: 'swag-bundle-detail'
             },
             path: 'detail/:id'
+        },
+        create: {
+            components: {
+                default: 'swag-bundle-create'
+            },
+            path: 'create'
         }
     },
 

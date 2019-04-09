@@ -1,20 +1,17 @@
-<sw-page class="swag-bundle-list">
-    <template slot="smart-bar-actions">
-        <sw-button variant="primary">Add bundle</sw-button>
-    </template>
+{% block swag_bundle_list %}
+    <sw-page class="swag-bundle-list">
+        <template slot="smart-bar-actions">
+            <sw-button variant="primary" :routerLink="{ name: 'swag.bundle.create' }">Add bundle</sw-button>
+        </template>
 
-    <template slot="content">
-        <sw-entity-listing
-            v-if="bundles"
-            :items="bundles"
-            :repository="repository"
-            :columns="columns"
-            detailRoute="swag.bundle.detail">
-
-{#            <template slot="column-discount" slot-scope="{ item }">#}
-{#                {{ item.discount }} €#}
-{#            </template>#}
-
-        </sw-entity-listing>
-    </template>
-</sw-page>
+        <template slot="content">
+            <sw-entity-listing
+                v-if="bundles"
+                :items="bundles"
+                :repository="repository"
+                :columns="columns"
+                detailRoute="swag.bundle.detail">
+            </sw-entity-listing>
+        </template>
+    </sw-page>
+{% endblock %}

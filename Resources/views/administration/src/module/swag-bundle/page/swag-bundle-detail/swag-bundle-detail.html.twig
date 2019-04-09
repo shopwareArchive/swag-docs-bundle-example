@@ -7,21 +7,22 @@
     <template slot="content">
         <sw-card-view>
             <sw-card v-if="bundle" title="General" :isLoading="isLoading">
-
-                <sw-field label="Name" v-model="bundle.name"></sw-field>
-                <sw-field label="Discount" v-model="bundle.discount" type="number" suffix="€"></sw-field>
+                <sw-field label="Name" v-model="bundle.name" validation="required"></sw-field>
+                <sw-field label="Discount" v-model="bundle.discount" type="number" validation="required"></sw-field>
 
                 <sw-field
-                        type="radio"
-                        label="Discount type"
-                        v-model="bundle.discountType"
-                        :options="[
+                    type="radio"
+                    label="Discount type"
+                    v-model="bundle.discountType"
+                    validation="required"
+                    :options="[
                       {'value': 'absolute', 'name': 'Absolute'},
                       {'value': 'percentage', 'name': 'Percentage'},
                     ]">
                 </sw-field>
 
                 <sw-entity-multi-select
+                    :localMode="bundle.isNew()"
                     label="Assign products"
                     :collection="bundle.products">
                 </sw-entity-multi-select>
