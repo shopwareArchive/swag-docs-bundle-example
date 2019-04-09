@@ -9,8 +9,13 @@
       "name": "shopware AG"
     }
   ],
+  "autoload": {
+    "psr-4": {
+      "ShopwareLabs\\Plugin\\SwagBundleExample\\": "src/"
+    }
+  },
   "extra": {
-    "shopware-plugin-class": "SwagBundleExample\\SwagBundleExample",
+    "shopware-plugin-class": "ShopwareLabs\\Plugin\\SwagBundleExample\\SwagBundleExample",
     "copyright": "(c) by shopware AG",
     "label": {
       "de_DE": "Beispiel für Shopware",

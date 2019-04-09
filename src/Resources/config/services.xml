@@ -1,0 +1,42 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    
+    <services>
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product\ProductExtension">
+            <tag name="shopware.entity.extension"/>
+        </service>
+
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\BundleDefinition">
+            <tag name="shopware.entity.definition"/>
+        </service>
+
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleTranslation\BundleTranslationDefinition">
+            <tag name="shopware.entity.definition"/>
+        </service>
+
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition">
+            <tag name="shopware.entity.definition"/>
+        </service>
+
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Command\BundleDemoCommand">
+            <argument id="swag_bundle.repository" type="service"/>
+            <argument id="product.repository" type="service"/>
+            <tag name="console.command"/>
+        </service>
+
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Bundle\BundleCollector">
+            <argument id="swag_bundle.repository" type="service"/>
+            <tag name="ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Cart\CollectorInterface" priority="1200"/>
+        </service>
+
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product\Storefront\StorefrontProductRepositoryDecorator" decorates="Shopware\Core\Content\Product\Storefront\StorefrontProductRepository">
+            <argument id="product.repository" type="service"/>
+            <argument id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator" type="service"/>
+        </service>
+
+
+    </services>
+</container>
