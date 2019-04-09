@@ -1,5 +1,5 @@
 {
-  "name": "shopware-example/swag-bundle",
+  "name": "shopware-labs/swag-bundle-example",
   "description": "Bundle example",
   "version": "v1.0.0",
   "type": "shopware-platform-plugin",
