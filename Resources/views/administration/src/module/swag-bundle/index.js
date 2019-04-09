@@ -8,7 +8,7 @@ Module.register('swag-bundle', {
     description: 'Bundle products',
     version: '1.0.0',
     targetVersion: '1.0.0',
-    color: '#ff3822',
+    color: '#ff3d58',
     icon: 'default-shopping-paper-bag-product',
 
     routes: {
@@ -29,7 +29,7 @@ Module.register('swag-bundle', {
     navigation: [{
         id: 'swag-bundle-list',
         label: 'Bundle',
-        color: '#ff3822',
+        color: '#ff3d58',
         path: 'swag.bundle.list',
         icon: 'default-shopping-paper-bag-product',
         position: 100
