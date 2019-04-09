@@ -1,4 +1,4 @@
-import { Component } from 'src/core/shopware';
+import { Component, Mixin } from 'src/core/shopware';
 import template from './swag-bundle-detail.html.twig';
 
 Component.register('swag-bundle-detail', {
@@ -10,6 +10,10 @@ Component.register('swag-bundle-detail', {
         'context'
     ],
 
+    mixins: [
+        Mixin.getByName('notification')
+    ],
+
     data() {
         return {
             repository: null,
@@ -19,7 +23,7 @@ Component.register('swag-bundle-detail', {
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('product_manufacturer');
+        this.repository = this.repositoryFactory.create('swag_bundle');
 
         this.getBundle();
     },
@@ -36,15 +40,21 @@ Component.register('swag-bundle-detail', {
         },
 
         onClickSave() {
-            // sends the request immediately
             this.isLoading = true;
 
+            // sends the request immediately
             this.repository
                 .save(this.bundle, this.context)
                 .then(() => {
-                    // the entity is stateless, the new data has be fetched from the server, if required
+                    // the entity is stateless, the new data has to be fetched from the server, if required
                     this.getBundle();
                     this.isLoading = false;
+                }).catch((exception) => {
+                    this.isLoading = false;
+                    this.createNotificationError({
+                        title: 'The bundle could not be saved.',
+                        message: exception
+                    });
                 });
         }
     }
