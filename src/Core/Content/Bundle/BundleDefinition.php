@@ -44,7 +44,7 @@ class BundleDefinition extends EntityDefinition
             (new FloatField('discount', 'discount'))->addFlags(new Required()),
             new CreatedAtField(),
             new UpdatedAtField(),
-            new TranslationsAssociationField(BundleTranslationDefinition::class, 'bundle_id'),
+            new TranslationsAssociationField(BundleTranslationDefinition::class, 'swag_bundle_id'),
             new ManyToManyAssociationField('products', ProductDefinition::class, BundleProductDefinition::class, 'bundle_id', 'product_id'),
         ]);
     }

@@ -14,21 +14,15 @@ Module.register('swag-bundle', {
 
     routes: {
         list: {
-            components: {
-                default: 'swag-bundle-list'
-            },
+            component: 'swag-bundle-list',
             path: 'list'
         },
         detail: {
-            components: {
-                default: 'swag-bundle-detail'
-            },
+            component: 'swag-bundle-detail',
             path: 'detail/:id'
         },
         create: {
-            components: {
-                default: 'swag-bundle-create'
-            },
+            component: 'swag-bundle-create',
             path: 'create'
         }
     },
