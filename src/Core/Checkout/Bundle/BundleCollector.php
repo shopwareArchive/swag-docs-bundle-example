@@ -23,6 +23,7 @@ class BundleCollector implements CollectorInterface
     public const DATA_KEY = 'swag_bundles';
     public const DISCOUNT_TYPE_ABSOLUTE = 'absolute';
     public const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+
     /**
      * @var EntityRepositoryInterface
      */
