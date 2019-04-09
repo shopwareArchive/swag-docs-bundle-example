@@ -1,1 +1,1 @@
-import "./src/module/swag-bundle"
+import './src/module/swag-bundle';

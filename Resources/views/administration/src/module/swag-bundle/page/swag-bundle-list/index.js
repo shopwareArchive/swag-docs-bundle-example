@@ -1,6 +1,6 @@
 import { Component } from 'src/core/shopware';
 import Criteria from 'src/core/data-new/criteria.data';
-import template from './swag-bundle-list.html.twig'
+import template from './swag-bundle-list.html.twig';
 
 Component.register('swag-bundle-list', {
 
@@ -15,7 +15,7 @@ Component.register('swag-bundle-list', {
         return {
             repository: null,
             bundles: null
-        }
+        };
     },
 
     computed: {
@@ -40,7 +40,7 @@ Component.register('swag-bundle-list', {
                 label: 'Description',
                 inlineEdit: 'string',
                 allowResize: true
-            }]
+            }];
         }
     },
 

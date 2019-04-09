@@ -1,5 +1,5 @@
 import { Component } from 'src/core/shopware';
-import template from './swag-bundle-detail.html.twig'
+import template from './swag-bundle-detail.html.twig';
 
 Component.register('swag-bundle-detail', {
 
@@ -15,7 +15,7 @@ Component.register('swag-bundle-detail', {
             repository: null,
             bundle: null,
             isLoading: false
-        }
+        };
     },
 
     created() {
