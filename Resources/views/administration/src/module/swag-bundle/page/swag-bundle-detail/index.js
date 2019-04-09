@@ -19,7 +19,7 @@ Component.register('swag-bundle-detail', {
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('product_manufacturer');
+        this.repository = this.repositoryFactory.create('swag_bundle');
 
         this.getBundle();
     },

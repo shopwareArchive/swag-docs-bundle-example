@@ -29,23 +29,22 @@ Component.register('swag-bundle-list', {
                 allowResize: true,
                 primary: true
             }, {
-                property: 'link',
-                dataIndex: 'link',
-                label: 'Website',
-                inlineEdit: 'string',
+                property: 'discount',
+                dataIndex: 'discount',
+                label: 'Discount',
+                inlineEdit: 'number',
                 allowResize: true
             }, {
-                property: 'description',
-                dataIndex: 'description',
-                label: 'Description',
-                inlineEdit: 'string',
+                property: 'discountType',
+                dataIndex: 'discountType',
+                label: 'Discount type',
                 allowResize: true
             }];
         }
     },
 
     created() {
-        this.repository = this.repositoryFactory.create('product_manufacturer');
+        this.repository = this.repositoryFactory.create('swag_bundle');
         this.isLoading = true;
 
         this.repository

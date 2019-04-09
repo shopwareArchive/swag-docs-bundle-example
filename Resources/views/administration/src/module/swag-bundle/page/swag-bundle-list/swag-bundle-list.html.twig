@@ -1,6 +1,6 @@
 <sw-page class="swag-bundle-list">
     <template slot="smart-bar-actions">
-        <sw-button variant="primary">Create</sw-button>
+        <sw-button variant="primary">Add bundle</sw-button>
     </template>
 
     <template slot="content">
@@ -10,6 +10,11 @@
             :repository="repository"
             :columns="columns"
             detailRoute="swag.bundle.detail">
+
+{#            <template slot="column-discount" slot-scope="{ item }">#}
+{#                {{ item.discount }} €#}
+{#            </template>#}
+
         </sw-entity-listing>
     </template>
 </sw-page>
