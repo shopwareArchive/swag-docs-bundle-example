@@ -29,7 +29,7 @@
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Bundle\BundleCollector">
             <argument id="swag_bundle.repository" type="service"/>
-            <tag name="ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Cart\CollectorInterface" priority="1200"/>
+            <tag name="Shopware\Core\Checkout\Cart\CollectorInterface" priority="1200"/>
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product\Storefront\StorefrontProductRepositoryDecorator" decorates="Shopware\Core\Content\Product\Storefront\StorefrontProductRepository">

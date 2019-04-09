@@ -162,7 +162,6 @@ class BundleCollector implements CollectorInterface
     private function isComplete(LineItem $lineItem)
     {
         return $lineItem->getLabel()
-            && $lineItem->getDescription()
             && $lineItem->getChildren() !== null
             && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')
             && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')->getPriceDefinition();
