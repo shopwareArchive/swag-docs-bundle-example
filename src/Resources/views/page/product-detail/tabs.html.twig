@@ -31,7 +31,7 @@
                 <h2>{{ bundle.name }}</h2>
                     <div class="row">
                     {% for product in bundle.products.elements %}
-                        <div class="col">
+                        <div class="col-4">
                             {% sw_include '@Storefront/component/product/widget/box-basic.html.twig' with {'product': product} %}
                         </div>
                     {% endfor %}
