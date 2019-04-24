@@ -3,6 +3,7 @@
 namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleProduct;
 
 use Shopware\Core\Content\Product\ProductDefinition;
+use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\FkField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
@@ -24,11 +25,11 @@ class BundleProductDefinition extends MappingEntityDefinition
     {
         return new FieldCollection([
             (new FkField('bundle_id', 'bundleId', BundleDefinition::class))->addFlags(new PrimaryKey(), new Required()),
-            (new FkField('product_id', 'productId', ProductDefinition::class))->addFlags(new PrimaryKey(), new Required()),
-            (new ReferenceVersionField(ProductDefinition::class))->addFlags(new PrimaryKey(), new Required()),
+            (new FkField('product_id', 'productId', SalesChannelProductDefinition::class))->addFlags(new PrimaryKey(), new Required()),
+            (new ReferenceVersionField(SalesChannelProductDefinition::class))->addFlags(new PrimaryKey(), new Required()),
             new CreatedAtField(),
             new ManyToOneAssociationField('bundle', 'bundle_id', BundleDefinition::class),
-            new ManyToOneAssociationField('product', 'product_id', ProductDefinition::class),
+            new ManyToOneAssociationField('product', 'product_id', SalesChannelProductDefinition::class),
         ]);
     }
 }

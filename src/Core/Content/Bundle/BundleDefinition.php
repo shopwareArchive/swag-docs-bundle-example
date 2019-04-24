@@ -3,6 +3,7 @@
 namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle;
 
 use Shopware\Core\Content\Product\ProductDefinition;
+use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\CreatedAtField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
@@ -45,7 +46,7 @@ class BundleDefinition extends EntityDefinition
             new CreatedAtField(),
             new UpdatedAtField(),
             new TranslationsAssociationField(BundleTranslationDefinition::class, 'swag_bundle_id'),
-            new ManyToManyAssociationField('products', ProductDefinition::class, BundleProductDefinition::class, 'bundle_id', 'product_id'),
+            new ManyToManyAssociationField('products', SalesChannelProductDefinition::class, BundleProductDefinition::class, 'bundle_id', 'product_id'),
         ]);
     }
 }
