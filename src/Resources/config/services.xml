@@ -22,19 +22,18 @@
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Command\BundleDemoCommand">
-            <argument id="swag_bundle.repository" type="service"/>
-            <argument id="product.repository" type="service"/>
+            <argument type="service" id="swag_bundle.repository"/>
+            <argument type="service" id="product.repository"/>
             <tag name="console.command"/>
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Bundle\BundleCollector">
-            <argument id="swag_bundle.repository" type="service"/>
-            <tag name="Shopware\Core\Checkout\Cart\CollectorInterface" priority="1200"/>
+            <argument type="service" id="swag_bundle.repository"/>
+            <tag name="shopware.cart.collector" priority="1200"/>
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product\Storefront\StorefrontProductRepositoryDecorator" decorates="Shopware\Core\Content\Product\Storefront\StorefrontProductRepository">
-            <argument id="product.repository" type="service"/>
-            <argument id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator" type="service"/>
+        <service id="ShopwareLabs\Plugin\SwagBundleExample\Storefront\Page\Product\Subscriber\ProductPageCriteriaSubscriber">
+            <tag name="kernel.event_subscriber"/>
         </service>
 
     </services>

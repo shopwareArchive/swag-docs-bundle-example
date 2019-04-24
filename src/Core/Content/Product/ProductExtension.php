@@ -3,6 +3,7 @@
 namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product;
 
 use Shopware\Core\Content\Product\ProductDefinition;
+use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityExtensionInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Extension;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
@@ -22,7 +23,7 @@ class ProductExtension implements EntityExtensionInterface
     public function extendFields(FieldCollection $collection): void
     {
         $collection->add(
-            (new ManyToManyAssociationField('bundles', BundleDefinition::class, BundleProductDefinition::class, 'product_id', 'bundle_id'))->addFlags(new Extension())
+            new ManyToManyAssociationField('bundles', BundleDefinition::class, BundleProductDefinition::class, 'product_id', 'bundle_id')
         );
     }
 
@@ -31,6 +32,6 @@ class ProductExtension implements EntityExtensionInterface
      */
     public function getDefinitionClass(): string
     {
-        return ProductDefinition::class;
+        return SalesChannelProductDefinition::class;
     }
 }

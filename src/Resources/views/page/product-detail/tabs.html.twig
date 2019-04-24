@@ -29,22 +29,24 @@
             <div class="container">
             {% for bundle in page.product.extension('bundles').elements %}
                 <h2>{{ bundle.name }}</h2>
-                    <div class="row">
-                    {% for product in bundle.products.elements %}
-                        <div class="col-4">
-                            {% sw_include '@Storefront/component/product/widget/box-basic.html.twig' with {'product': product} %}
-                        </div>
-                    {% endfor %}
+                <div class="row">
+                {% for product in bundle.products.elements %}
+                    <div class="col-4">
+                        {% sw_include '@Storefront/component/product/widget/box-basic.html.twig' with {'product': product} %}
                     </div>
+                {% endfor %}
+                </div>
                 <div class="row justify-content-md-center">
-                    <form action="{{ path('storefront-api.checkout.cart.line-item.add', {'version': 1, 'id': bundle.id}) }}"
+                    <form action="{{ path('sales-channel-api.checkout.cart.line-item.add', {'version': 1, 'id': bundle.id}) }}"
                           method="post"
                           class="buy-widget"
                           data-add-to-cart="true">
-                        <input type="hidden" name="type" value="swagbundle"/>
+                        <div class="form-row buy-widget-container">
                             <button class="btn btn-primary btn-block buy-widget-submit">
                                 Buy bundle and save {{ bundle.discount }}{{ bundle.discountType == 'absolute' ? '€' : '%' }}
                             </button>
+                            <input type="hidden" name="type" value="swagbundle"/>
+                        </div>
                     </form>
                 </div>
             {% endfor %}
