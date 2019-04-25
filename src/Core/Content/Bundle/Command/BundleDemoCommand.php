@@ -57,8 +57,8 @@ class BundleDemoCommand extends Command
                 'discount' => random_int(100, 1000) / 100,
                 'discountType' => random_int(0, 1) ? 'absolute' : 'percentage', // todo
                 'name' => [
-                    'de_DE' => 'Beispiel Bundle ' . $i,
-                    'en_GB' => 'Example bundle ' . $i,
+                    'de-DE' => 'Beispiel Bundle ' . $i,
+                    'en-GB' => 'Example bundle ' . $i,
                 ],
                 'products' => [
                     [
