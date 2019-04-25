@@ -18,8 +18,8 @@
     "shopware-plugin-class": "ShopwareLabs\\Plugin\\SwagBundleExample\\SwagBundleExample",
     "copyright": "(c) by shopware AG",
     "label": {
-      "de_DE": "Beispiel für Shopware",
-      "en_GB": "Example for Shopware"
+      "de-DE": "Beispiel für Shopware",
+      "en-GB": "Example for Shopware"
     }
   }
 }
