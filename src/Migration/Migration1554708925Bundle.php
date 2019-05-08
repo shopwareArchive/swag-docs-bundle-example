@@ -7,17 +7,11 @@ use Shopware\Core\Framework\Migration\MigrationStep;
 
 class Migration1554708925Bundle extends MigrationStep
 {
-    /**
-     * get creation timestamp
-     */
     public function getCreationTimestamp(): int
     {
         return 1554708925;
     }
 
-    /**
-     * update non-destructive changes
-     */
     public function update(Connection $connection): void
     {
         $connection->executeQuery('
@@ -61,9 +55,6 @@ class Migration1554708925Bundle extends MigrationStep
         ');
     }
 
-    /**
-     * update destructive changes
-     */
     public function updateDestructive(Connection $connection): void
     {
     }

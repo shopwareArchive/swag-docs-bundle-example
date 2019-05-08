@@ -77,6 +77,7 @@ class BundleCollector implements CollectorInterface
                 continue;
             }
 
+            // Add line items BEFORE collect and enrich of the product entity
             foreach ($bundle->getProducts()->getIds() as $productId) {
                 if ($bundleLineItem->getChildren()->has($productId)) {
                     continue;
@@ -119,7 +120,7 @@ class BundleCollector implements CollectorInterface
 
             $bundle = $bundles->get($id);
 
-            if(!$bundle) {
+            if (!$bundle) {
                 continue;
             }
 

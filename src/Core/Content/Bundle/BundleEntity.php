@@ -30,7 +30,7 @@ class BundleEntity extends Entity
      */
     protected $products;
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

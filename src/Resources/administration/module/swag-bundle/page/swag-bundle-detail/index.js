@@ -18,7 +18,8 @@ Component.register('swag-bundle-detail', {
         return {
             repository: null,
             bundle: null,
-            isLoading: false
+            isLoading: false,
+            isSaveSuccessful: false
         };
     },
 
@@ -49,6 +50,7 @@ Component.register('swag-bundle-detail', {
                     // the entity is stateless, the new data has to be fetched from the server, if required
                     this.getBundle();
                     this.isLoading = false;
+                    this.isSaveSuccessful = true;
                 }).catch((exception) => {
                     this.isLoading = false;
                     this.createNotificationError({
@@ -56,6 +58,10 @@ Component.register('swag-bundle-detail', {
                         message: exception
                     });
                 });
-        }
+        },
+
+        saveFinish() {
+            this.isSaveSuccessful = false;
+        },
     }
 });

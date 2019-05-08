@@ -3,7 +3,6 @@ import Criteria from 'src/core/data-new/criteria.data';
 import template from './swag-bundle-list.html.twig';
 
 Component.register('swag-bundle-list', {
-
     template,
 
     inject: [

@@ -1,7 +1,15 @@
 <sw-page class="swag-bundle-detail">
     <template slot="smart-bar-actions">
         <sw-button :routerLink="{ name: 'swag.bundle.list' }">Cancel</sw-button>
-        <sw-button variant="primary" @click="onClickSave">Save</sw-button>
+
+        <sw-button-process
+            :isLoading="isLoading"
+            :processSuccess="isSaveSuccessful"
+            variant="primary"
+            @process-finish="saveFinish"
+            @click.prevent="onClickSave">
+                Save
+        </sw-button-process>
     </template>
 
     <template slot="content">
@@ -21,11 +29,11 @@
                     ]">
                 </sw-field>
 
-                <sw-entity-multi-select
+                <sw-many-to-many-select
                     :localMode="bundle.isNew()"
                     label="Assign products"
                     :collection="bundle.products">
-                </sw-entity-multi-select>
+                </sw-many-to-many-select>
             </sw-card>
         </sw-card-view>
     </template>
