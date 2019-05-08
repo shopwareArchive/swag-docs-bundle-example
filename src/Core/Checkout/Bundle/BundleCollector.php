@@ -6,10 +6,10 @@ use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CollectorInterface;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
+use Shopware\Core\Checkout\Cart\LineItem\Struct\QuantityInformation;
 use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
 use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
-use Shopware\Core\Content\Product\Cart\ProductCollector;
-use Shopware\Core\Content\Product\Cart\Struct\ProductFetchDefinition;
+use Shopware\Core\Content\Product\Cart\ProductFetchDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Struct\StructCollection;
@@ -82,7 +82,7 @@ class BundleCollector implements CollectorInterface
                 if ($bundleLineItem->getChildren()->has($productId)) {
                     continue;
                 }
-                $productLineItem = new LineItem($productId, ProductCollector::LINE_ITEM_TYPE);
+                $productLineItem = new LineItem($productId, LineItem::PRODUCT_LINE_ITEM_TYPE);
                 $productLineItem->setPayload(['id' => $productId]);
                 $bundleLineItem->addChild($productLineItem);
             }

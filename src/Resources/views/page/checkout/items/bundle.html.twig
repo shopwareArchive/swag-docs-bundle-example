@@ -1,0 +1,42 @@
+{% sw_extends '@Storefront/page/checkout/items/product.html.twig' %}
+
+{% block page_product_detail_buy_quantity %}
+    {% if lineItem.stackable %}
+        <select name="quantity"
+                class="custom-select quantity-select">
+            {% for quantity in range(lineItem.quantityInformation.minPurchase|default(0), maxQuantity, lineItem.quantityInformation.purchaseSteps|default(1)) %}
+                <option value="{{ quantity }}"
+                        {% if quantity == lineItem.quantity %} selected="selected"{% endif %}>
+                    {{ quantity }}
+                </option>
+            {% endfor %}
+        </select>
+    {% else %}
+        {{ lineItem.quantity }}
+    {% endif %}
+{% endblock %}
+
+
+{% block page_checkout_item_product_inner %}
+    <div class="cart-item cart-item-{{ lineItem.type }}" style="margin-left: {{ depth * 50 }}px">
+        <div class="row cart-item-row">
+            {{ block('page_checkout_item_product_info') }}
+            {{ block('page_checkout_item_product_quantity') }}
+            {{ block('page_checkout_item_product_unit_price') }}
+            {{ block('page_checkout_item_product_total_price') }}
+            {{ block('page_checkout_item_product_remove') }}
+        </div>
+    </div>
+
+    {% if lineItem.children %}
+        {% for child in lineItem.children %}
+            {% with {
+                'lineItem': child,
+                'depth': depth + 1
+                } %}
+                {{ block('page_checkout_item_product_inner') }}
+            {% endwith %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+

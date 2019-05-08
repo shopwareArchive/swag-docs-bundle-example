@@ -39,10 +39,10 @@
                 <div class="row justify-content-md-center">
                     <form action="{{ path('sales-channel-api.checkout.cart.line-item.add', {'version': 1, 'id': bundle.id}) }}"
                           method="post"
-                          class="buy-widget"
+                          class="buy-widget js-add-to-cart"
                           data-add-to-cart="true">
                         <div class="form-row buy-widget-container">
-                            <button class="btn btn-primary btn-block buy-widget-submit">
+                            <button class="btn btn-primary btn-block buy-widget-submit" style="margin-top: 10px;">
                                 Buy bundle and save {{ bundle.discount }}{{ bundle.discountType == 'absolute' ? '€' : '%' }}
                             </button>
                             <input type="hidden" name="type" value="swagbundle"/>
