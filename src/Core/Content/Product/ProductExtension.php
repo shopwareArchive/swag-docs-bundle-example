@@ -3,9 +3,7 @@
 namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product;
 
 use Shopware\Core\Content\Product\ProductDefinition;
-use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityExtensionInterface;
-use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Extension;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\ManyToManyAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition;
@@ -32,6 +30,6 @@ class ProductExtension implements EntityExtensionInterface
      */
     public function getDefinitionClass(): string
     {
-        return SalesChannelProductDefinition::class;
+        return ProductDefinition::class;
     }
 }

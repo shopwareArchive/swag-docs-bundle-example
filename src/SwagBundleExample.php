@@ -8,11 +8,6 @@ use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
 class SwagBundleExample extends Plugin
 {
-    public function getAdministrationEntryPath(): string
-    {
-        return 'Administration';
-    }
-
     public function uninstall(UninstallContext $context): void
     {
         parent::uninstall($context);

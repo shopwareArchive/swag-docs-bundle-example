@@ -2,14 +2,12 @@
 
 namespace ShopwareLabs\Plugin\SwagBundleExample\Storefront\Page\Product\Subscriber;
 
-
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Storefront\Page\Product\ProductPageCriteriaEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ProductPageCriteriaSubscriber implements EventSubscriberInterface
 {
-
     public static function getSubscribedEvents()
     {
         return [

@@ -7,8 +7,6 @@ Module.register('swag-bundle', {
     type: 'plugin',
     name: 'Bundle',
     description: 'Bundle products',
-    version: '1.0.0',
-    targetVersion: '1.0.0',
     color: '#ff3d58',
     icon: 'default-shopping-paper-bag-product',
 
@@ -19,16 +17,21 @@ Module.register('swag-bundle', {
         },
         detail: {
             component: 'swag-bundle-detail',
-            path: 'detail/:id'
+            path: 'detail/:id',
+            meta: {
+                parentPath: 'swag.bundle.list'
+            }
         },
         create: {
             component: 'swag-bundle-create',
-            path: 'create'
-        }
+            path: 'create',
+            meta: {
+                parentPath: 'swag.bundle.list'
+            }
+        },
     },
 
     navigation: [{
-        id: 'swag-bundle-list',
         label: 'Bundle',
         color: '#ff3d58',
         path: 'swag.bundle.list',

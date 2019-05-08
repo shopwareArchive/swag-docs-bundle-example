@@ -10,15 +10,15 @@
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\BundleDefinition">
-            <tag name="shopware.entity.definition"/>
+            <tag name="shopware.entity.definition" entity="swag_bundle" />
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleTranslation\BundleTranslationDefinition">
-            <tag name="shopware.entity.definition"/>
+            <tag name="shopware.entity.definition" entity="swag_bundle_translation" />
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition">
-            <tag name="shopware.entity.definition"/>
+            <tag name="shopware.entity.definition" entity="swag_bundle_product"/>
         </service>
 
         <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Command\BundleDemoCommand">
