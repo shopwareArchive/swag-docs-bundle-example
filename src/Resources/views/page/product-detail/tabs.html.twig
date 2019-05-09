@@ -32,7 +32,7 @@
                 <div class="row">
                 {% for product in bundle.products.elements %}
                     <div class="col-4">
-                        {% sw_include '@Storefront/component/product/widget/box-basic.html.twig' with {'product': product} %}
+                        {% sw_include '@Storefront/component/product/widget/box-standard.html.twig' with {'product': product} %}
                     </div>
                 {% endfor %}
                 </div>
