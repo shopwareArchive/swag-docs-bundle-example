@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Command;
+namespace Swag\BundleExample\Core\Content\Bundle\Command;
 
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;

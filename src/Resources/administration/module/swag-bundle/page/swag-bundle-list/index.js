@@ -17,12 +17,18 @@ Component.register('swag-bundle-list', {
         };
     },
 
+    metaInfo() {
+        return {
+            title: this.$createTitle()
+        };
+    },
+
     computed: {
         columns() {
             return [{
                 property: 'name',
                 dataIndex: 'name',
-                label: 'Name',
+                label: this.$t('swag-bundle.list.columnName'),
                 routerLink: 'swag.bundle.detail',
                 inlineEdit: 'string',
                 allowResize: true,
@@ -30,13 +36,13 @@ Component.register('swag-bundle-list', {
             }, {
                 property: 'discount',
                 dataIndex: 'discount',
-                label: 'Discount',
+                label: this.$t('swag-bundle.list.columnDiscount'),
                 inlineEdit: 'number',
                 allowResize: true
             }, {
                 property: 'discountType',
                 dataIndex: 'discountType',
-                label: 'Discount type',
+                label: this.$t('swag-bundle.list.columnDiscountType'),
                 allowResize: true
             }];
         }
@@ -44,13 +50,11 @@ Component.register('swag-bundle-list', {
 
     created() {
         this.repository = this.repositoryFactory.create('swag_bundle');
-        this.isLoading = true;
 
         this.repository
             .search(new Criteria(), this.context)
             .then((result) => {
                 this.bundles = result;
-                this.isLoading = false;
             });
     }
 });

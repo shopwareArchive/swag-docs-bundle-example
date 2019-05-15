@@ -2,13 +2,21 @@ import { Module } from 'src/core/shopware';
 import './page/swag-bundle-list';
 import './page/swag-bundle-detail';
 import './page/swag-bundle-create';
+import deDE from "./snippet/de-DE";
+import enGB from "./snippet/en-GB";
 
 Module.register('swag-bundle', {
     type: 'plugin',
     name: 'Bundle',
-    description: 'Bundle products',
+    title: 'swag-bundle.general.mainMenuItemGeneral',
+    description: 'sw-property.general.descriptionTextModule',
     color: '#ff3d58',
     icon: 'default-shopping-paper-bag-product',
+
+    snippets: {
+        'de-DE': deDE,
+        'en-GB': enGB
+    },
 
     routes: {
         list: {
@@ -32,7 +40,7 @@ Module.register('swag-bundle', {
     },
 
     navigation: [{
-        label: 'Bundle',
+        label: 'swag-bundle.general.mainMenuItemGeneral',
         color: '#ff3d58',
         path: 'swag.bundle.list',
         icon: 'default-shopping-paper-bag-product',

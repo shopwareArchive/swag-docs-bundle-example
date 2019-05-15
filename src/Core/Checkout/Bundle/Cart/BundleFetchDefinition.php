@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Bundle;
+namespace Swag\BundleExample\Core\Checkout\Bundle\Cart;
 
 use Shopware\Core\Framework\Struct\Struct;
 

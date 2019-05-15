@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle;
+namespace Swag\BundleExample\Core\Content\Bundle;
 
 use Shopware\Core\Framework\DataAbstractionLayer\EntityCollection;
 

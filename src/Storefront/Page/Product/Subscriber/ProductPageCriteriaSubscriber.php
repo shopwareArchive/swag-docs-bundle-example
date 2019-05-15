@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample\Storefront\Page\Product\Subscriber;
+namespace Swag\BundleExample\Storefront\Page\Product\Subscriber;
 
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Storefront\Page\Product\ProductPageCriteriaEvent;
@@ -11,11 +11,11 @@ class ProductPageCriteriaSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            ProductPageCriteriaEvent::NAME => 'onProductLoaded'
+            ProductPageCriteriaEvent::NAME => 'onProductCriteriaLoaded'
         ];
     }
 
-    public function onProductLoaded(ProductPageCriteriaEvent $event)
+    public function onProductCriteriaLoaded(ProductPageCriteriaEvent $event): void
     {
         $event->getCriteria()->addAssociation('bundles', (new Criteria())->addAssociation('products'));
     }

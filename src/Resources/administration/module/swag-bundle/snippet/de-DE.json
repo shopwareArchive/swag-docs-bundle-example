@@ -1,0 +1,25 @@
+{
+    "swag-bundle": {
+        "general": {
+            "mainMenuItemGeneral": "Bundle",
+            "descriptionTextModule": "Verwalte die Bundles hier"
+        },
+        "list": {
+            "addButtonText": "Bundle hinzufügen",
+            "columnName": "Name",
+            "columnDiscountType": "Rabatt Typ",
+            "columnDiscount": "Rabatt"
+        },
+        "detail": {
+            "nameLabel": "Name",
+            "discountLabel": "Rabatt",
+            "discountTypeLabel": "Rabatt Typ",
+            "assignProductsLabel": "Produkte zuweisen",
+            "cancelButtonText": "Abbrechen",
+            "saveButtonText": "Speichern",
+            "errorTitle": "Fehler beim Speichern des Bundles",
+            "absoluteText": "Absolut",
+            "percentageText": "Prozentual"
+        }
+    }
+}

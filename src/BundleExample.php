@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample;
+namespace Swag\BundleExample;
 
 use Doctrine\DBAL\Connection;
 use Shopware\Core\Framework\Plugin;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
-class SwagBundleExample extends Plugin
+class BundleExample extends Plugin
 {
     public function uninstall(UninstallContext $context): void
     {

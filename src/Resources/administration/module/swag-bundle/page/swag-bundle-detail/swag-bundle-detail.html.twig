@@ -1,37 +1,34 @@
 <sw-page class="swag-bundle-detail">
     <template slot="smart-bar-actions">
-        <sw-button :routerLink="{ name: 'swag.bundle.list' }">Cancel</sw-button>
+        <sw-button :routerLink="{ name: 'swag.bundle.list' }">
+            {{ $t('swag-bundle.detail.cancelButtonText') }}
+        </sw-button>
 
         <sw-button-process
             :isLoading="isLoading"
-            :processSuccess="isSaveSuccessful"
+            :processSuccess="processSuccess"
             variant="primary"
             @process-finish="saveFinish"
-            @click.prevent="onClickSave">
-                Save
+            @click="onClickSave">
+            {{ $t('swag-bundle.detail.saveButtonText') }}
         </sw-button-process>
     </template>
 
     <template slot="content">
         <sw-card-view>
-            <sw-card v-if="bundle" title="General" :isLoading="isLoading">
-                <sw-field label="Name" v-model="bundle.name" validation="required"></sw-field>
-                <sw-field label="Discount" v-model="bundle.discount" type="number" validation="required"></sw-field>
+            <sw-card v-if="bundle" :isLoading="isLoading">
+                <sw-field :label="$t('swag-bundle.detail.nameLabel')" v-model="bundle.name"></sw-field>
+                <sw-field :label="$t('swag-bundle.detail.discountLabel')" v-model="bundle.discount" type="number"></sw-field>
 
-                <sw-field
-                    type="radio"
-                    label="Discount type"
+                <sw-field type="radio"
+                    :label="$t('swag-bundle.detail.discountTypeLabel')"
                     v-model="bundle.discountType"
-                    validation="required"
-                    :options="[
-                      {'value': 'absolute', 'name': 'Absolute'},
-                      {'value': 'percentage', 'name': 'Percentage'},
-                    ]">
+                    :options="options">
                 </sw-field>
 
                 <sw-many-to-many-select
                     :localMode="bundle.isNew()"
-                    label="Assign products"
+                    :label="$t('swag-bundle.detail.assignProductsLabel')"
                     :collection="bundle.products">
                 </sw-many-to-many-select>
             </sw-card>

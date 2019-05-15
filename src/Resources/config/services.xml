@@ -5,36 +5,43 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     
     <services>
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Product\ProductExtension">
+        <service id="Swag\BundleExample\Core\Content\Product\ProductExtension">
             <tag name="shopware.entity.extension"/>
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\BundleDefinition">
+        <service id="Swag\BundleExample\Core\Content\Bundle\BundleDefinition">
             <tag name="shopware.entity.definition" entity="swag_bundle" />
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleTranslation\BundleTranslationDefinition">
+        <service id="Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleTranslation\BundleTranslationDefinition">
             <tag name="shopware.entity.definition" entity="swag_bundle_translation" />
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition">
+        <service id="Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition">
             <tag name="shopware.entity.definition" entity="swag_bundle_product"/>
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Command\BundleDemoCommand">
+        <service id="Swag\BundleExample\Core\Content\Bundle\Command\BundleDemoCommand">
             <argument type="service" id="swag_bundle.repository"/>
             <argument type="service" id="product.repository"/>
             <tag name="console.command"/>
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Bundle\BundleCollector">
+        <service id="Swag\BundleExample\Core\Checkout\Bundle\Cart\BundleCollector">
             <argument type="service" id="swag_bundle.repository"/>
             <tag name="shopware.cart.collector" priority="1200"/>
         </service>
 
-        <service id="ShopwareLabs\Plugin\SwagBundleExample\Storefront\Page\Product\Subscriber\ProductPageCriteriaSubscriber">
+        <service id="Swag\BundleExample\Storefront\Page\Product\Subscriber\ProductPageCriteriaSubscriber">
             <tag name="kernel.event_subscriber"/>
         </service>
 
+        <service id="Swag\BundleExample\Snippet\Files\en_GB\SnippetFile_en_GB">
+            <tag name="shopware.snippet.file" priority="100"/>
+        </service>
+
+        <service id="Swag\BundleExample\Snippet\Files\de_DE\SnippetFile_de_DE">
+            <tag name="shopware.snippet.file" priority="100"/>
+        </service>
     </services>
 </container>

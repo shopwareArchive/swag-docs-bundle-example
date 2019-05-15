@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Checkout\Bundle;
+namespace Swag\BundleExample\Core\Checkout\Bundle\Cart;
 
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CollectorInterface;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
-use Shopware\Core\Checkout\Cart\LineItem\Struct\QuantityInformation;
 use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
 use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
 use Shopware\Core\Content\Product\Cart\ProductFetchDefinition;
@@ -14,15 +13,15 @@ use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Struct\StructCollection;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\BundleCollection;
-use ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\BundleEntity;
+use Swag\BundleExample\Core\Content\Bundle\BundleCollection;
+use Swag\BundleExample\Core\Content\Bundle\BundleEntity;
 
 class BundleCollector implements CollectorInterface
 {
     public const TYPE = 'swagbundle';
-    public const DATA_KEY = 'swag_bundles';
     public const DISCOUNT_TYPE_ABSOLUTE = 'absolute';
     public const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+    private const DATA_KEY = 'swag_bundles';
 
     /**
      * @var EntityRepositoryInterface
@@ -61,7 +60,6 @@ class BundleCollector implements CollectorInterface
 
         $ids = array_unique(array_merge(...$ids));
 
-        // TODO the product relation is currently loaded in basic but only the product ids are really needed!
         $criteria = new Criteria($ids);
         $criteria->addAssociation('products');
         $bundles = $this->bundleRepository->search($criteria, $context->getContext())->getEntities();
@@ -152,7 +150,7 @@ class BundleCollector implements CollectorInterface
 
         $discount = new LineItem(
             $bundleData->getId() . '-discount',
-            self::TYPE,
+            self::TYPE . '-discount',
             $bundleLineItem->getQuantity()
         );
 
@@ -161,12 +159,11 @@ class BundleCollector implements CollectorInterface
         return $discount;
     }
 
-    private function isComplete(LineItem $lineItem)
+    private function isComplete(LineItem $lineItem): bool
     {
         return $lineItem->getLabel()
             && $lineItem->getChildren() !== null
             && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')
             && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')->getPriceDefinition();
     }
-
 }

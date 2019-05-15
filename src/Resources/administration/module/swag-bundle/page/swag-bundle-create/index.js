@@ -17,11 +17,11 @@ Component.extend('swag-bundle-create', 'swag-bundle-detail', {
                 }).catch((exception) => {
                     this.isLoading = false;
 
-                    this.createNotificationError({
-                        title: 'The bundle could not be saved.',
-                        message: exception
-                    });
+                this.createNotificationError({
+                    title: this.$t('swag-bundle.detail.errorTitle'),
+                    message: exception
                 });
+            });
         }
     }
 });

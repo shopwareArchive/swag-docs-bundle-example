@@ -1,9 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle;
+namespace Swag\BundleExample\Core\Content\Bundle;
 
 use Shopware\Core\Content\Product\ProductDefinition;
-use Shopware\Core\Content\Product\SalesChannel\SalesChannelProductDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\PrimaryKey;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\Flag\Required;
@@ -14,8 +13,8 @@ use Shopware\Core\Framework\DataAbstractionLayer\Field\StringField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslatedField;
 use Shopware\Core\Framework\DataAbstractionLayer\Field\TranslationsAssociationField;
 use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
-use ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition;
-use ShopwareLabs\Plugin\SwagBundleExample\Core\Content\Bundle\Aggregate\BundleTranslation\BundleTranslationDefinition;
+use Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition;
+use Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleTranslation\BundleTranslationDefinition;
 
 class BundleDefinition extends EntityDefinition
 {
@@ -42,7 +41,7 @@ class BundleDefinition extends EntityDefinition
             (new StringField('discount_type', 'discountType'))->addFlags(new Required()),
             (new FloatField('discount', 'discount'))->addFlags(new Required()),
             new TranslationsAssociationField(BundleTranslationDefinition::class, 'swag_bundle_id'),
-            new ManyToManyAssociationField('products', SalesChannelProductDefinition::class, BundleProductDefinition::class, 'bundle_id', 'product_id'),
+            new ManyToManyAssociationField('products', ProductDefinition::class, BundleProductDefinition::class, 'bundle_id', 'product_id'),
         ]);
     }
 }
