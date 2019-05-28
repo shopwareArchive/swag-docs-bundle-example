@@ -29,7 +29,7 @@ class Migration1554708925Bundle extends MigrationStep
             CREATE TABLE IF NOT EXISTS `swag_bundle_translation` (
               `swag_bundle_id` BINARY(16) NOT NULL,
               `language_id` BINARY(16) NOT NULL,
-              `name` VARCHAR(255) NOT NULL,
+              `name` VARCHAR(255),
               `created_at` DATETIME(3) NOT NULL,
               `updated_at` DATETIME(3) NULL,
               PRIMARY KEY (`swag_bundle_id`, `language_id`),
