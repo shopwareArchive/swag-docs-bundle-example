@@ -1,0 +1,17 @@
+{% sw_extends '@Storefront/page/checkout/_item/product.html.twig' %}
+
+{% block page_checkout_item_product_quantity_form %}{% endblock %}
+
+{% block page_checkout_item_product_inner %}
+    {{ parent() }}
+
+    {% for lineItem in lineItem.children %}
+        <div class="row child-item-row">
+            <div class="spacer col-md-2"></div>
+            {% sw_include '@Storefront/page/checkout/checkout-item.html.twig' %}
+        </div>
+
+    {% endfor %}
+
+
+{% endblock %}
