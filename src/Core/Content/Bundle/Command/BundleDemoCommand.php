@@ -5,7 +5,6 @@ namespace Swag\BundleExample\Core\Content\Bundle\Command;
 use Shopware\Core\Framework\Context;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\Uuid\Uuid;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,15 +22,17 @@ class BundleDemoCommand extends Command
      */
     protected $productRepository;
 
-    public function __construct(EntityRepositoryInterface $bundleRepository, EntityRepositoryInterface $productRepository)
-    {
+    public function __construct(
+        EntityRepositoryInterface $bundleRepository,
+        EntityRepositoryInterface $productRepository
+    ) {
         parent::__construct();
 
         $this->bundleRepository = $bundleRepository;
         $this->productRepository = $productRepository;
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         parent::configure();
         $this->setName('bundle:demo');
@@ -45,14 +46,13 @@ class BundleDemoCommand extends Command
         $criteria->setLimit(50);
         $productIds = $this->productRepository->searchIds(new Criteria(), $context)->getIds();
 
-        if (count($productIds) === 0) {
+        if (\count($productIds) === 0) {
             $io->error('Please create products before by using bin/console framework:demodata');
             exit(1);
         }
 
         $data = [];
         for ($i = 0; $i < 10; ++$i) {
-            $bundleId = Uuid::randomHex();
             $data[] = [
                 'discount' => random_int(100, 1000) / 100,
                 'discountType' => random_int(0, 1) ? 'absolute' : 'percentage', // todo

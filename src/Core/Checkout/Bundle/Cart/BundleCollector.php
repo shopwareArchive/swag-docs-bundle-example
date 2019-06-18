@@ -5,11 +5,17 @@ namespace Swag\BundleExample\Core\Checkout\Bundle\Cart;
 use Shopware\Core\Checkout\Cart\Cart;
 use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CollectorInterface;
+use Shopware\Core\Checkout\Cart\Exception\InvalidChildQuantityException;
+use Shopware\Core\Checkout\Cart\Exception\InvalidPayloadException;
+use Shopware\Core\Checkout\Cart\Exception\InvalidQuantityException;
+use Shopware\Core\Checkout\Cart\Exception\LineItemNotStackableException;
+use Shopware\Core\Checkout\Cart\Exception\MixedLineItemTypeException;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
 use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
 use Shopware\Core\Content\Product\Cart\ProductFetchDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
+use Shopware\Core\Framework\DataAbstractionLayer\Exception\InconsistentCriteriaIdsException;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\Framework\Struct\StructCollection;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -33,8 +39,12 @@ class BundleCollector implements CollectorInterface
         $this->bundleRepository = $bundleRepository;
     }
 
-    public function prepare(StructCollection $definitions, Cart $cart, SalesChannelContext $context, CartBehavior $behavior): void
-    {
+    public function prepare(
+        StructCollection $definitions,
+        Cart $cart,
+        SalesChannelContext $context,
+        CartBehavior $behavior
+    ): void {
         $bundleLineItems = $cart->getLineItems()->filterType(self::TYPE);
 
         if ($bundleLineItems->count() === 0) {
@@ -44,8 +54,20 @@ class BundleCollector implements CollectorInterface
         $definitions->add(new BundleFetchDefinition($bundleLineItems->getKeys()));
     }
 
-    public function collect(StructCollection $fetchDefinitions, StructCollection $data, Cart $cart, SalesChannelContext $context, CartBehavior $behavior): void
-    {
+    /**
+     * @throws InvalidChildQuantityException
+     * @throws InvalidPayloadException
+     * @throws InvalidQuantityException
+     * @throws MixedLineItemTypeException
+     * @throws InconsistentCriteriaIdsException
+     */
+    public function collect(
+        StructCollection $fetchDefinitions,
+        StructCollection $data,
+        Cart $cart,
+        SalesChannelContext $context,
+        CartBehavior $behavior
+    ): void {
         $bundleDefinitions = $fetchDefinitions->filterInstance(BundleFetchDefinition::class);
 
         if ($bundleDefinitions->count() === 0) {
@@ -94,8 +116,17 @@ class BundleCollector implements CollectorInterface
         $data->set(self::DATA_KEY, $bundles);
     }
 
-    public function enrich(StructCollection $data, Cart $cart, SalesChannelContext $context, CartBehavior $behavior): void
-    {
+    /**
+     * @throws InvalidQuantityException
+     * @throws MixedLineItemTypeException
+     * @throws LineItemNotStackableException
+     */
+    public function enrich(
+        StructCollection $data,
+        Cart $cart,
+        SalesChannelContext $context,
+        CartBehavior $behavior
+    ): void {
         if (!$data->has(self::DATA_KEY)) {
             return;
         }
@@ -104,7 +135,7 @@ class BundleCollector implements CollectorInterface
         $bundles = $data->get(self::DATA_KEY);
 
         $bundleLineItems = $cart->getLineItems()->filterType(self::TYPE);
-        if (count($bundleLineItems) === 0) {
+        if (\count($bundleLineItems) === 0) {
             return;
         }
 
@@ -130,20 +161,34 @@ class BundleCollector implements CollectorInterface
         }
     }
 
-    private function calculateBundleDiscount(LineItem $bundleLineItem, BundleEntity $bundleData, SalesChannelContext $context): ?LineItem
-    {
-        if ($bundleData->getDiscount() === 0) {
+    /**
+     * @throws InvalidQuantityException
+     */
+    private function calculateBundleDiscount(
+        LineItem $bundleLineItem,
+        BundleEntity $bundleData,
+        SalesChannelContext $context
+    ): ?LineItem {
+        if ($bundleData->getDiscount() === 0.0) {
             return null;
         }
 
+        $price = null;
+        $label = '';
         switch ($bundleData->getDiscountType()) {
             case self::DISCOUNT_TYPE_ABSOLUTE:
-                $price = new AbsolutePriceDefinition($bundleData->getDiscount() * -1, $context->getContext()->getCurrencyPrecision());
+                $price = new AbsolutePriceDefinition(
+                    $bundleData->getDiscount() * -1,
+                    $context->getContext()->getCurrencyPrecision()
+                );
                 $label = 'Absolute bundle voucher';
                 break;
 
             case self::DISCOUNT_TYPE_PERCENTAGE:
-                $price = new PercentagePriceDefinition($bundleData->getDiscount() * -1, $context->getContext()->getCurrencyPrecision());
+                $price = new PercentagePriceDefinition(
+                    $bundleData->getDiscount() * -1,
+                    $context->getContext()->getCurrencyPrecision()
+                );
                 $label = sprintf('Percental bundle voucher (%s%%)', $bundleData->getDiscount());
                 break;
         }

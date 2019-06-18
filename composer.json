@@ -8,6 +8,9 @@
             "name": "shopware AG"
         }
     ],
+    "require": {
+        "shopware/platform": "dev-master"
+    },
     "type": "shopware-platform-plugin",
     "autoload": {
         "psr-4": {
