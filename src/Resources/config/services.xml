@@ -9,6 +9,10 @@
             <tag name="shopware.entity.extension"/>
         </service>
 
+        <service id="Swag\BundleExample\Core\Content\Product\SalesChannelProductExtension">
+            <tag name="shopware.entity.extension"/>
+        </service>
+
         <service id="Swag\BundleExample\Core\Content\Bundle\BundleDefinition">
             <tag name="shopware.entity.definition" entity="swag_bundle" />
         </service>

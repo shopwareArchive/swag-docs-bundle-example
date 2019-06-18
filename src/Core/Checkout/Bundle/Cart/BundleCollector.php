@@ -80,7 +80,7 @@ class BundleCollector implements CollectorInterface
                 if ($bundleLineItem->getChildren()->has($productId)) {
                     continue;
                 }
-                $productLineItem = new LineItem($productId, LineItem::PRODUCT_LINE_ITEM_TYPE);
+                $productLineItem = new LineItem($productId, LineItem::PRODUCT_LINE_ITEM_TYPE, $productId);
                 $productLineItem->setPayload(['id' => $productId]);
                 $bundleLineItem->addChild($productLineItem);
             }
@@ -114,7 +114,7 @@ class BundleCollector implements CollectorInterface
                 continue;
             }
 
-            $id = $bundleLineItem->getKey();
+            $id = $bundleLineItem->getId();
 
             $bundle = $bundles->get($id);
 
@@ -151,6 +151,7 @@ class BundleCollector implements CollectorInterface
         $discount = new LineItem(
             $bundleData->getId() . '-discount',
             self::TYPE . '-discount',
+            $bundleData->getId(),
             $bundleLineItem->getQuantity()
         );
 
@@ -163,7 +164,7 @@ class BundleCollector implements CollectorInterface
     {
         return $lineItem->getLabel()
             && $lineItem->getChildren() !== null
-            && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')
-            && $lineItem->getChildren()->get($lineItem->getKey() . '-discount')->getPriceDefinition();
+            && $lineItem->getChildren()->get($lineItem->getId() . '-discount')
+            && $lineItem->getChildren()->get($lineItem->getId() . '-discount')->getPriceDefinition();
     }
 }
