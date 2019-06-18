@@ -31,8 +31,8 @@ Component.register('swag-bundle-detail', {
     computed: {
         options() {
             return [
-                {'value': 'absolute', 'name': this.$t('swag-bundle.detail.absoluteText')},
-                {'value': 'percentage', 'name': this.$t('swag-bundle.detail.percentageText')},
+                { value: 'absolute', name: this.$t('swag-bundle.detail.absoluteText') },
+                { value: 'percentage', name: this.$t('swag-bundle.detail.percentageText') }
             ];
         }
     },
@@ -71,6 +71,6 @@ Component.register('swag-bundle-detail', {
 
         saveFinish() {
             this.processSuccess = false;
-        },
+        }
     }
 });
