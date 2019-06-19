@@ -9,10 +9,6 @@
             <tag name="shopware.entity.extension"/>
         </service>
 
-        <service id="Swag\BundleExample\Core\Content\Product\SalesChannelProductExtension">
-            <tag name="shopware.entity.extension"/>
-        </service>
-
         <service id="Swag\BundleExample\Core\Content\Bundle\BundleDefinition">
             <tag name="shopware.entity.definition" entity="swag_bundle" />
         </service>
@@ -31,9 +27,14 @@
             <tag name="console.command"/>
         </service>
 
-        <service id="Swag\BundleExample\Core\Checkout\Bundle\Cart\BundleCollector">
+        <service id="Swag\BundleExample\Core\Checkout\Bundle\Cart\BundleCartProcessor">
             <argument type="service" id="swag_bundle.repository"/>
-            <tag name="shopware.cart.collector" priority="1200"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator"/>
+            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
+
+            <tag name="shopware.cart.processor" priority="6000" />
+            <tag name="shopware.cart.collector" priority="6000" />
         </service>
 
         <service id="Swag\BundleExample\Storefront\Page\Product\Subscriber\ProductPageCriteriaSubscriber">

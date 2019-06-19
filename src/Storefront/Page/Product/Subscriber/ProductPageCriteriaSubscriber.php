@@ -17,6 +17,6 @@ class ProductPageCriteriaSubscriber implements EventSubscriberInterface
 
     public function onProductCriteriaLoaded(ProductPageCriteriaEvent $event): void
     {
-        $event->getCriteria()->addAssociation('bundles', (new Criteria())->addAssociation('products'));
+        $event->getCriteria()->addAssociationPath('bundles.products.cover');
     }
 }
