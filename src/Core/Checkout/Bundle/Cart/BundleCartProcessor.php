@@ -7,23 +7,21 @@ use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CartDataCollectorInterface;
 use Shopware\Core\Checkout\Cart\CartProcessorInterface;
 use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryInformation;
+use Shopware\Core\Checkout\Cart\LineItem\CartDataCollection;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
+use Shopware\Core\Checkout\Cart\LineItem\LineItemCollection;
+use Shopware\Core\Checkout\Cart\LineItem\QuantityInformation;
 use Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator;
-use Shopware\Core\Checkout\Cart\Price\AmountCalculator;
 use Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
-use Shopware\Core\Checkout\Cart\Price\Struct\CalculatedPrice;
 use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
-use Shopware\Core\Checkout\Cart\Price\Struct\PriceCollection;
 use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
-use Shopware\Core\Content\Product\ProductCollection;
-use Shopware\Core\Content\Product\ProductEntity;
+use Shopware\Core\Checkout\Cart\Tax\PercentageTaxRuleBuilder;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
-use Shopware\Core\Framework\Struct\StructCollection;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
-use Svg\Tag\Line;
+use Swag\BundleExample\Core\Content\Bundle\BundleCollection;
 use Swag\BundleExample\Core\Content\Bundle\BundleEntity;
 
 class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorInterface
@@ -52,35 +50,36 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
      */
     private $quantityPriceCalculator;
 
+    /**
+     * @var PercentageTaxRuleBuilder
+     */
+    private $percentageTaxRuleBuilder;
+
     public function __construct(
         EntityRepositoryInterface $bundleRepository,
         PercentagePriceCalculator $percentagePriceCalculator,
         AbsolutePriceCalculator $absolutePriceCalculator,
-        QuantityPriceCalculator $quantityPriceCalculator
+        QuantityPriceCalculator $quantityPriceCalculator,
+        PercentageTaxRuleBuilder $percentageTaxRuleBuilder
     )
     {
         $this->bundleRepository = $bundleRepository;
         $this->percentagePriceCalculator = $percentagePriceCalculator;
         $this->absolutePriceCalculator = $absolutePriceCalculator;
         $this->quantityPriceCalculator = $quantityPriceCalculator;
+        $this->percentageTaxRuleBuilder = $percentageTaxRuleBuilder;
     }
 
-    public function collect(StructCollection $data, Cart $original, SalesChannelContext $context, CartBehavior $behavior): void
+    public function collect(CartDataCollection $data, Cart $original, SalesChannelContext $context, CartBehavior $behavior): void
     {
         $bundleLineItems = $original->getLineItems()
-            ->filterFlatByType(self::TYPE);
+            ->filterType(self::TYPE);
 
         if (\count($bundleLineItems) === 0) {
             return;
         }
 
-        $ids = array_map(function(LineItem $lineItem) {
-            return $lineItem->getReferencedId();
-        }, $bundleLineItems);
-
-        $criteria = new Criteria($ids);
-        $criteria->addAssociation('products');
-        $bundles = $this->bundleRepository->search($criteria, $context->getContext())->getEntities();
+        $bundles = $this->fetchBundles($bundleLineItems, $data, $context);
 
         /** @var BundleEntity $bundle */
         foreach ($bundles as $bundle) {
@@ -92,74 +91,108 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
                 continue;
             }
 
-            if (!$bundleLineItem->getLabel()) {
-                $bundleLineItem->setLabel($bundle->getName());
-            }
-
-            $bundleLineItem->setRemovable(true)->setStackable(true);
-
-            $bundleLineItem->setDeliveryInformation(
-                new DeliveryInformation(
-                    (int) $bundle->getProducts()->first()->getStock(),
-                    (float) $bundle->getProducts()->first()->getWeight(),
-                    $bundle->getProducts()->first()->getDeliveryDate(),
-                    $bundle->getProducts()->first()->getRestockDeliveryDate(),
-                    $bundle->getProducts()->first()->getShippingFree()
-                )
-            );
-
-            foreach ($bundle->getProducts()->getIds() as $productId) {
-                if ($bundleLineItem->getChildren()->has($productId)) {
-                    continue;
-                }
-                $productLineItem = new LineItem($productId, LineItem::PRODUCT_LINE_ITEM_TYPE, $productId);
-                $productLineItem->setPayload(['id' => $productId]);
-
-                $bundleLineItem->addChild($productLineItem);
-            }
-
-            if (!$this->getDiscount($bundleLineItem)) {
-                $discount = $this->getDiscountLineItem($bundleLineItem, $bundle, $context);
-
-                if ($discount) {
-                    $bundleLineItem->addChild($discount);
-                }
-            }
+            $this->enrichBundle($bundleLineItem, $bundle);
+            $this->addMissingProducts($bundleLineItem, $bundle);
+            $this->addDiscount($bundleLineItem, $bundle, $context);
         }
     }
 
-    public function process(StructCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
+    public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
     {
         $bundleLineItems = $original->getLineItems()
-            ->filterFlatByType(self::TYPE);
+            ->filterType(self::TYPE);
 
         if (\count($bundleLineItems) === 0) {
             return;
         }
 
         foreach ($bundleLineItems as $bundleLineItem) {
-            foreach ($bundleLineItem->getChildren()->filterType(LineItem::PRODUCT_LINE_ITEM_TYPE) as $lineItem) {
-                /** @var QuantityPriceDefinition $priceDefinition */
-                $priceDefinition = $lineItem->getPriceDefinition();
-
-                $lineItem->setPrice($this->quantityPriceCalculator->calculate($priceDefinition, $context));
-            }
-
-            /** @var BundleEntity $bundle */
-            $bundle = $data->get(self::DATA_KEY . $bundleLineItem->getReferencedId());
-            $discount = $this->getDiscount($bundleLineItem);
-
-            $this->calculateDiscountPrice($discount, $bundleLineItem, $bundle, $context);
-
-            $bundleLineItem->setPrice(
-                $this->percentagePriceCalculator->calculate(100, $bundleLineItem->getChildren()->getPrices(), $context)
-            );
+            $this->calculateChildProductPrices($bundleLineItem, $context);
+            $this->calculateDiscountPrice($bundleLineItem, $context);
+            $this->calculateBundlePrice($bundleLineItem, $context);
 
             $toCalculate->add($bundleLineItem);
         }
     }
 
-    private function getDiscountLineItem(LineItem $bundleLineItem, BundleEntity $bundleData, SalesChannelContext $context): ?LineItem
+    /**
+     * Fetches all Bundles that are not already stored in data
+     */
+    private function fetchBundles(LineItemCollection $bundleLineItems, CartDataCollection $data, SalesChannelContext $context): BundleCollection
+    {
+        $bundleIds = $bundleLineItems->getReferenceIds();
+
+        $filtered = [];
+        foreach ($bundleIds as $bundleId) {
+            // If data already contains the bundle we don't need to fetch it again
+            if ($data->has(self::DATA_KEY . $bundleId)) {
+                continue;
+            }
+
+            $filtered[] = $bundleId;
+        }
+
+        $criteria = new Criteria($filtered);
+        $criteria->addAssociation('products');
+        /** @var BundleCollection $bundles */
+        $bundles = $this->bundleRepository->search($criteria, $context->getContext())->getEntities();
+
+        return $bundles;
+    }
+
+    private function enrichBundle(LineItem $bundleLineItem, BundleEntity $bundle): void
+    {
+        if (!$bundleLineItem->getLabel()) {
+            $bundleLineItem->setLabel($bundle->getName());
+        }
+
+        $bundleLineItem->setRemovable(true)
+            ->setStackable(true)
+            ->setDeliveryInformation(
+                new DeliveryInformation(
+                    (int)$bundle->getProducts()->first()->getStock(),
+                    (float)$bundle->getProducts()->first()->getWeight(),
+                    $bundle->getProducts()->first()->getDeliveryDate(),
+                    $bundle->getProducts()->first()->getRestockDeliveryDate(),
+                    $bundle->getProducts()->first()->getShippingFree()
+                )
+            )
+            ->setQuantityInformation(new QuantityInformation());
+    }
+
+    private function addMissingProducts(LineItem $bundleLineItem, BundleEntity $bundle): void
+    {
+        foreach ($bundle->getProducts()->getIds() as $productId) {
+            // if the bundleLineItem already contains the product we can skip it
+            if ($bundleLineItem->getChildren()->has($productId)) {
+                continue;
+            }
+
+            // the ProductCartProcessor will enrich the product further
+            $productLineItem = new LineItem($productId, LineItem::PRODUCT_LINE_ITEM_TYPE, $productId);
+            $productLineItem->setPayload(['id' => $productId]);
+
+            $bundleLineItem->addChild($productLineItem);
+        }
+    }
+
+    private function addDiscount(LineItem $bundleLineItem, BundleEntity $bundle, SalesChannelContext $context): void
+    {
+        if (!$this->getDiscount($bundleLineItem)) {
+            $discount = $this->createDiscount($bundleLineItem, $bundle, $context);
+
+            if ($discount) {
+                $bundleLineItem->addChild($discount);
+            }
+        }
+    }
+
+    private function getDiscount(LineItem $bundle): ?LineItem
+    {
+        return $bundle->getChildren()->get($bundle->getReferencedId() . '-discount');
+    }
+
+    private function createDiscount(LineItem $bundleLineItem, BundleEntity $bundleData, SalesChannelContext $context): ?LineItem
     {
         if ($bundleData->getDiscount() === 0) {
             return null;
@@ -188,13 +221,26 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         );
 
         $discount->setPriceDefinition($priceDefinition)
-            ->setLabel($label);
+            ->setLabel($label)
+            ->setGood(false);
 
         return $discount;
     }
 
-    private function calculateDiscountPrice(?LineItem $discount, LineItem $bundleLineItem, BundleEntity $bundle, SalesChannelContext $context): void
+    private function calculateChildProductPrices(LineItem $bundleLineItem, SalesChannelContext $context): void
     {
+        foreach ($bundleLineItem->getChildren()->filterType(LineItem::PRODUCT_LINE_ITEM_TYPE) as $lineItem) {
+            /** @var QuantityPriceDefinition $priceDefinition */
+            $priceDefinition = $lineItem->getPriceDefinition();
+
+            $lineItem->setPrice($this->quantityPriceCalculator->calculate($priceDefinition, $context));
+        }
+    }
+
+    private function calculateDiscountPrice(LineItem $bundleLineItem, SalesChannelContext $context): void
+    {
+        $discount = $this->getDiscount($bundleLineItem);
+
         if (!$discount) {
             return;
         }
@@ -203,19 +249,25 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
             ->filterType(LineItem::PRODUCT_LINE_ITEM_TYPE)
             ->getPrices();
 
-        switch ($bundle->getDiscountType()) {
-            case self::DISCOUNT_TYPE_ABSOLUTE:
+        $priceDefinition = $discount->getPriceDefinition();
+
+        if (!$priceDefinition) {
+            return;
+        }
+
+        switch (\get_class($priceDefinition)) {
+            case AbsolutePriceDefinition::class:
                 $price = $this->absolutePriceCalculator->calculate(
-                    $discount->getPriceDefinition()->getPrice(),
-                    new PriceCollection($childPrices),
+                    $priceDefinition->getPrice(),
+                    $childPrices,
                     $context
                 );
                 break;
 
-            case self::DISCOUNT_TYPE_PERCENTAGE:
+            case PercentagePriceDefinition::class:
                 $price = $this->percentagePriceCalculator->calculate(
-                    $discount->getPriceDefinition()->getPercentage(),
-                    new PriceCollection($childPrices),
+                    $priceDefinition->getPercentage(),
+                    $childPrices,
                     $context
                 );
                 break;
@@ -227,8 +279,22 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         $discount->setPrice($price);
     }
 
-    private function getDiscount(LineItem $bundle): ?LineItem
+    private function calculateBundlePrice(LineItem $bundleLineItem, SalesChannelContext $context): void
     {
-        return $bundle->getChildren()->get($bundle->getReferencedId() . '-discount');
+        $unitPrice = $bundleLineItem->getChildren()->getPrices()->sum();
+        $priceDefinition = new QuantityPriceDefinition(
+            $unitPrice->getTotalPrice(),
+            $this->percentageTaxRuleBuilder->buildRules($unitPrice),
+            $context->getContext()->getCurrencyPrecision(),
+            $bundleLineItem->getQuantity()
+        );
+
+        $bundleLineItem->setPriceDefinition(
+            $priceDefinition
+        );
+
+        $bundleLineItem->setPrice(
+            $this->quantityPriceCalculator->calculate($priceDefinition, $context)
+        );
     }
 }
