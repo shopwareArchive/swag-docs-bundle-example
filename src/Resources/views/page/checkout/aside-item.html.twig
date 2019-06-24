@@ -1,9 +1,0 @@
-{% sw_extends '@Storefront/page/checkout/aside-item.html.twig' %}
-{% block page_checkout_summary_item %}
-    {{ parent() }}
-    {% if lineItem.type == 'swagbundle' %}
-        {% block page_checkout_item_bundle %}
-            {% sw_include '@Storefront/page/checkout/_item/bundle-aside.html.twig' %}
-        {% endblock %}
-    {% endif %}
-{% endblock %}
