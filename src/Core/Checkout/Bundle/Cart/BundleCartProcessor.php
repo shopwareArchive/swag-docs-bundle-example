@@ -77,12 +77,10 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         /** @var BundleEntity $bundle */
         foreach ($bundles as $bundle) {
             $data->set(self::DATA_KEY . $bundle->getId(), $bundle);
+        }
 
-            $bundleLineItem = $original->get($bundle->getId());
-
-            if (!$bundleLineItem) {
-                continue;
-            }
+        foreach ($bundleLineItems as $bundleLineItem) {
+            $bundle = $data->get(self::DATA_KEY . $bundleLineItem->getReferencedId());
 
             $this->enrichBundle($bundleLineItem, $bundle);
             $this->addMissingProducts($bundleLineItem, $bundle);
@@ -172,7 +170,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
     private function addDiscount(LineItem $bundleLineItem, BundleEntity $bundle, SalesChannelContext $context): void
     {
         if (!$this->getDiscount($bundleLineItem)) {
-            $discount = $this->createDiscount($bundleLineItem, $bundle, $context);
+            $discount = $this->createDiscount($bundle, $context);
 
             if ($discount) {
                 $bundleLineItem->addChild($discount);
@@ -185,7 +183,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         return $bundle->getChildren()->get($bundle->getReferencedId() . '-discount');
     }
 
-    private function createDiscount(LineItem $bundleLineItem, BundleEntity $bundleData, SalesChannelContext $context): ?LineItem
+    private function createDiscount(BundleEntity $bundleData, SalesChannelContext $context): ?LineItem
     {
         if ($bundleData->getDiscount() === 0) {
             return null;
@@ -209,8 +207,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         $discount = new LineItem(
             $bundleData->getId() . '-discount',
             self::DISCOUNT_TYPE,
-            $bundleData->getId(),
-            $bundleLineItem->getQuantity()
+            $bundleData->getId()
         );
 
         $discount->setPriceDefinition($priceDefinition)
@@ -253,7 +250,8 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
                 $price = $this->absolutePriceCalculator->calculate(
                     $priceDefinition->getPrice(),
                     $childPrices,
-                    $context
+                    $context,
+                    $bundleLineItem->getQuantity()
                 );
                 break;
 
