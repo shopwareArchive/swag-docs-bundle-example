@@ -50,24 +50,17 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
      */
     private $quantityPriceCalculator;
 
-    /**
-     * @var PercentageTaxRuleBuilder
-     */
-    private $percentageTaxRuleBuilder;
-
     public function __construct(
         EntityRepositoryInterface $bundleRepository,
         PercentagePriceCalculator $percentagePriceCalculator,
         AbsolutePriceCalculator $absolutePriceCalculator,
-        QuantityPriceCalculator $quantityPriceCalculator,
-        PercentageTaxRuleBuilder $percentageTaxRuleBuilder
+        QuantityPriceCalculator $quantityPriceCalculator
     )
     {
         $this->bundleRepository = $bundleRepository;
         $this->percentagePriceCalculator = $percentagePriceCalculator;
         $this->absolutePriceCalculator = $absolutePriceCalculator;
         $this->quantityPriceCalculator = $quantityPriceCalculator;
-        $this->percentageTaxRuleBuilder = $percentageTaxRuleBuilder;
     }
 
     public function collect(CartDataCollection $data, Cart $original, SalesChannelContext $context, CartBehavior $behavior): void
@@ -109,7 +102,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         foreach ($bundleLineItems as $bundleLineItem) {
             $this->calculateChildProductPrices($bundleLineItem, $context);
             $this->calculateDiscountPrice($bundleLineItem, $context);
-            $this->calculateBundlePrice($bundleLineItem, $context);
+            $this->calculateBundlePrice($bundleLineItem);
 
             $toCalculate->add($bundleLineItem);
         }
@@ -279,22 +272,10 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         $discount->setPrice($price);
     }
 
-    private function calculateBundlePrice(LineItem $bundleLineItem, SalesChannelContext $context): void
+    private function calculateBundlePrice(LineItem $bundleLineItem): void
     {
-        $unitPrice = $bundleLineItem->getChildren()->getPrices()->sum();
-        $priceDefinition = new QuantityPriceDefinition(
-            $unitPrice->getTotalPrice(),
-            $this->percentageTaxRuleBuilder->buildRules($unitPrice),
-            $context->getContext()->getCurrencyPrecision(),
-            $bundleLineItem->getQuantity()
-        );
-
-        $bundleLineItem->setPriceDefinition(
-            $priceDefinition
-        );
-
         $bundleLineItem->setPrice(
-            $this->quantityPriceCalculator->calculate($priceDefinition, $context)
+            $bundleLineItem->getChildren()->getPrices()->sum()
         );
     }
 }
