@@ -20,34 +20,5 @@
         <service id="Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition">
             <tag name="shopware.entity.definition" entity="swag_bundle_product"/>
         </service>
-
-        <service id="Swag\BundleExample\Core\Content\Bundle\Command\BundleDemoCommand">
-            <argument type="service" id="swag_bundle.repository"/>
-            <argument type="service" id="product.repository"/>
-            <tag name="console.command"/>
-        </service>
-
-        <service id="Swag\BundleExample\Core\Checkout\Bundle\Cart\BundleCartProcessor">
-            <argument type="service" id="swag_bundle.repository"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\AbsolutePriceCalculator"/>
-            <argument type="service" id="Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator"/>
-
-            <!-- inject before product processor (5000) -->
-            <tag name="shopware.cart.processor" priority="6000" />
-            <tag name="shopware.cart.collector" priority="6000" />
-        </service>
-
-        <service id="Swag\BundleExample\Storefront\Page\Product\Subscriber\ProductPageCriteriaSubscriber">
-            <tag name="kernel.event_subscriber"/>
-        </service>
-
-        <service id="Swag\BundleExample\Snippet\Files\en_GB\SnippetFile_en_GB">
-            <tag name="shopware.snippet.file" priority="100"/>
-        </service>
-
-        <service id="Swag\BundleExample\Snippet\Files\de_DE\SnippetFile_de_DE">
-            <tag name="shopware.snippet.file" priority="100"/>
-        </service>
     </services>
 </container>
