@@ -9,7 +9,9 @@
         }
     ],
     "require": {
-        "shopware/platform": "dev-master"
+        "shopware/core": "*",
+        "shopware/administration": "*",
+        "shopware/storefront": "*"
     },
     "type": "shopware-platform-plugin",
     "autoload": {
