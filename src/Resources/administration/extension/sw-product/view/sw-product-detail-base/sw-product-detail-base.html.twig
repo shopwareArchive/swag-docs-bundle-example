@@ -1,0 +1,14 @@
+{% block sw_product_detail_attribute_sets %}
+    {% parent() %}
+    <sw-card :title="$t('sw-product.detail.bundleCardLabel')"
+             :isLoading="isLoading">
+        <sw-many-to-many-select
+            v-if="!isLoading"
+            :localMode="product.isNew()"
+            :collection="product.extensions.bundles"
+            labelProperty="name"
+            :label="$t('sw-product.detail.bundleSelectLabel')"
+            :placeholder="$t('sw-product.detail.bundleSelectPlaceholder')">
+        </sw-many-to-many-select>
+    </sw-card>
+{% endblock %}

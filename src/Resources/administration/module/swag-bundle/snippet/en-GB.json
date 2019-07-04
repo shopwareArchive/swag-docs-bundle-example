@@ -21,5 +21,21 @@
             "absoluteText": "Absolute",
             "percentageText": "Percentage"
         }
+    },
+
+    "sw-product": {
+        "detail": {
+            "bundleCardLabel": "Bundles",
+            "bundleSelectLabel": "Associated bundles",
+            "bundleSelectPlaceholder": "Add bundle..."
+        }
+    },
+
+    "sw-condition": {
+        "condition": {
+            "cartContainsBundle": {
+                "label": "Cart contains bundle"
+            }
+        }
     }
 }
