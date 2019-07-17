@@ -42,11 +42,11 @@
             <tag name="kernel.event_subscriber"/>
         </service>
 
-        <service id="Swag\BundleExample\Snippet\Files\en_GB\SnippetFile_en_GB">
+        <service id="Swag\BundleExample\Resources\snippet\en_GB\SnippetFile_en_GB">
             <tag name="shopware.snippet.file" priority="100"/>
         </service>
 
-        <service id="Swag\BundleExample\Snippet\Files\de_DE\SnippetFile_de_DE">
+        <service id="Swag\BundleExample\Resources\snippet\de_DE\SnippetFile_de_DE">
             <tag name="shopware.snippet.file" priority="100"/>
         </service>
     </services>
