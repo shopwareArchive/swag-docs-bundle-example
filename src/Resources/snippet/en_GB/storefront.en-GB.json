@@ -3,7 +3,7 @@
         "detail": {
             "bundleBadge": "Bundle",
             "tabText": "Bundle",
-            "buyButtonText": "Buy bundle and save bundleDiscount symbol"
+            "buyButtonText": "Buy bundle and save %bundleDiscount%"
         }
     }
 }

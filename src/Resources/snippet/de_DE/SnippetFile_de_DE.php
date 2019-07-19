@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Swag\BundleExample\Snippet\Files\de_DE;
+namespace Swag\BundleExample\Resources\snippet\de_DE;
 
 use Shopware\Core\Framework\Snippet\Files\SnippetFileInterface;
 
@@ -8,12 +8,12 @@ class SnippetFile_de_DE implements SnippetFileInterface
 {
     public function getName(): string
     {
-        return 'messages.de-DE';
+        return 'storefront.de-DE';
     }
 
     public function getPath(): string
     {
-        return __DIR__ . '/messages.de-DE.json';
+        return __DIR__ . '/storefront.de-DE.json';
     }
 
     public function getIso(): string
@@ -23,11 +23,11 @@ class SnippetFile_de_DE implements SnippetFileInterface
 
     public function getAuthor(): string
     {
-        return 'Shopware';
+        return 'Enter developer name here';
     }
 
     public function isBase(): bool
     {
-        return true;
+        return false;
     }
 }
