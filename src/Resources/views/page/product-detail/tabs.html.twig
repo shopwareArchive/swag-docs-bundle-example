@@ -5,12 +5,7 @@
     {% if page.product.extension('bundles').elements|length > 0 %}
         <li class="nav-item">
             <a class="nav-link" id="bundle-tab" data-toggle="tab" data-offcanvas-tab="true" href="#bundle-tab-pane" role="tab" aria-controls="bundle-tab-pane" aria-selected="false">
-                {{ 'swag-bundle.detail.tabText'|trans }}
-                <span class="nav-link-icon">
-                    {% sw_include '@Storefront/utilities/icon.html.twig' with {
-                        'name': 'shopping-paper-bag-product'
-                    } %}
-                </span>
+                <span>{{ 'swag-bundle.detail.tabText'|trans }}</span>
             </a>
         </li>
     {% endif %}
