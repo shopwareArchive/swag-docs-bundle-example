@@ -160,9 +160,9 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
                 new DeliveryInformation(
                     (int)$bundle->getProducts()->first()->getStock(),
                     (float)$bundle->getProducts()->first()->getWeight(),
-                    $bundle->getProducts()->first()->getDeliveryDate(),
-                    $bundle->getProducts()->first()->getRestockDeliveryDate(),
-                    $bundle->getProducts()->first()->getShippingFree()
+                    $bundle->getProducts()->first()->getShippingFree(),
+                    $bundle->getProducts()->first()->getRestockTime(),
+                    $bundle->getProducts()->first()->getDeliveryDate()
                 )
             )
             ->setQuantityInformation(new QuantityInformation());
