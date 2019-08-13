@@ -2,8 +2,8 @@ import { Module } from 'src/core/shopware';
 import './page/swag-bundle-list';
 import './page/swag-bundle-detail';
 import './page/swag-bundle-create';
-import deDE from './snippet/de-DE';
-import enGB from './snippet/en-GB';
+import deDE from './snippet/de-DE.json';
+import enGB from './snippet/en-GB.json';
 
 Module.register('swag-bundle', {
     type: 'plugin',
