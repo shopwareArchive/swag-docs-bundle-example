@@ -49,5 +49,9 @@
         <service id="Swag\BundleExample\Resources\snippet\de_DE\SnippetFile_de_DE">
             <tag name="shopware.snippet.file" priority="100"/>
         </service>
+
+        <service id="Swag\BundleExample\Core\Checkout\Bundle\Cart\Rule\CartContainsBundleRule">
+            <tag name="shopware.rule.definition"/>
+        </service>
     </services>
 </container>
