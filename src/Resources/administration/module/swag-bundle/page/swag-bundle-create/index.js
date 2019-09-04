@@ -1,4 +1,4 @@
-import { Component } from 'src/core/shopware';
+const { Component } = Shopware;
 
 Component.extend('swag-bundle-create', 'swag-bundle-detail', {
     methods: {
