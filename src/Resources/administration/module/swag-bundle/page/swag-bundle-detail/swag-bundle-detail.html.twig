@@ -27,11 +27,11 @@
                               :options="options">
                     </sw-field>
 
-                    <sw-many-to-many-select
+                    <sw-entity-many-to-many-select
                         :localMode="bundle.isNew()"
                         :label="$t('swag-bundle.detail.assignProductsLabel')"
-                        :collection="bundle.products">
-                    </sw-many-to-many-select>
+                        :entityCollection="bundle.products">
+                    </sw-entity-many-to-many-select>
                 </sw-card>
             </sw-card-view>
         </template>
