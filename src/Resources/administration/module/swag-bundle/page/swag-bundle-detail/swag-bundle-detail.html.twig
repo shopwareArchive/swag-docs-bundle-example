@@ -30,7 +30,7 @@
                     <sw-entity-many-to-many-select
                         :localMode="bundle.isNew()"
                         :label="$t('swag-bundle.detail.assignProductsLabel')"
-                        :entityCollection="bundle.products">
+                        v-model="bundle.products">
                     </sw-entity-many-to-many-select>
                 </sw-card>
             </sw-card-view>

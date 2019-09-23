@@ -5,7 +5,7 @@
         <sw-entity-many-to-many-select
             v-if="!isLoading"
             :localMode="product.isNew()"
-            :entityCollection="product.extensions.bundles"
+            v-model="product.extensions.bundles"
             labelProperty="name"
             :label="$t('sw-product.detail.bundleSelectLabel')"
             :placeholder="$t('sw-product.detail.bundleSelectPlaceholder')">
