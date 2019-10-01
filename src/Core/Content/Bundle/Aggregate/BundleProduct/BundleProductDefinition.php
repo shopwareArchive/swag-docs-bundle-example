@@ -28,7 +28,7 @@ class BundleProductDefinition extends MappingEntityDefinition
             (new ReferenceVersionField(ProductDefinition::class))->addFlags(new PrimaryKey(), new Required()),
             new ManyToOneAssociationField('bundle', 'bundle_id', BundleDefinition::class),
             new ManyToOneAssociationField('product', 'product_id', ProductDefinition::class),
-            new CreatedAtField()
+            new CreatedAtField(),
         ]);
     }
 }

@@ -1,9 +1,9 @@
-<?php declare(strict_types = 1);
+<?php declare(strict_types=1);
 
 namespace Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleTranslation;
 
-use Swag\BundleExample\Core\Content\Bundle\BundleEntity;
 use Shopware\Core\Framework\DataAbstractionLayer\TranslationEntity;
+use Swag\BundleExample\Core\Content\Bundle\BundleEntity;
 
 class BundleTranslationEntity extends TranslationEntity
 {
@@ -22,9 +22,6 @@ class BundleTranslationEntity extends TranslationEntity
      */
     protected $bundle;
 
-    /**
-     * @return string
-     */
     public function getBundleId(): string
     {
         return $this->bundleId;
@@ -54,5 +51,4 @@ class BundleTranslationEntity extends TranslationEntity
     {
         $this->bundle = $bundle;
     }
-
 }

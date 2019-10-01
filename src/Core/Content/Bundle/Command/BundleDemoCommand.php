@@ -50,7 +50,8 @@ class BundleDemoCommand extends Command
 
         if (\count($productIds) === 0) {
             $io->error('Please create products before by using bin/console framework:demodata');
-            exit(1);
+
+            return 1;
         }
 
         $data = [];
@@ -76,5 +77,7 @@ class BundleDemoCommand extends Command
             ];
         }
         $this->bundleRepository->upsert($data, $context);
+
+        return null;
     }
 }
