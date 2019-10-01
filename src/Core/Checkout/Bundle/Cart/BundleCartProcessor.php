@@ -7,6 +7,7 @@ use Shopware\Core\Checkout\Cart\CartBehavior;
 use Shopware\Core\Checkout\Cart\CartDataCollectorInterface;
 use Shopware\Core\Checkout\Cart\CartProcessorInterface;
 use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryInformation;
+use Shopware\Core\Checkout\Cart\Delivery\Struct\DeliveryTime;
 use Shopware\Core\Checkout\Cart\LineItem\CartDataCollection;
 use Shopware\Core\Checkout\Cart\LineItem\LineItem;
 use Shopware\Core\Checkout\Cart\LineItem\LineItemCollection;
@@ -16,8 +17,6 @@ use Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
 use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
-use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
-use Shopware\Core\Checkout\Cart\Tax\PercentageTaxRuleBuilder;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -41,10 +40,12 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
      * @var PercentagePriceCalculator
      */
     private $percentagePriceCalculator;
+
     /**
      * @var AbsolutePriceCalculator
      */
     private $absolutePriceCalculator;
+
     /**
      * @var QuantityPriceCalculator
      */
@@ -55,8 +56,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         PercentagePriceCalculator $percentagePriceCalculator,
         AbsolutePriceCalculator $absolutePriceCalculator,
         QuantityPriceCalculator $quantityPriceCalculator
-    )
-    {
+    ) {
         $this->bundleRepository = $bundleRepository;
         $this->percentagePriceCalculator = $percentagePriceCalculator;
         $this->absolutePriceCalculator = $absolutePriceCalculator;
@@ -65,8 +65,8 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
     public function collect(CartDataCollection $data, Cart $original, SalesChannelContext $context, CartBehavior $behavior): void
     {
-        $bundleLineItems = $original->getLineItems()
-            ->filterType(self::TYPE);
+        /** @var LineItemCollection $bundleLineItems */
+        $bundleLineItems = $original->getLineItems()->filterType(self::TYPE);
 
         // no bundles in cart? exit
         if (\count($bundleLineItems) === 0) {
@@ -154,15 +154,30 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
             $bundleLineItem->setLabel($bundle->getName());
         }
 
+        $bundleProducts = $bundle->getProducts();
+        if ($bundleProducts === null) {
+            throw new \RuntimeException(sprintf('Bundle "%s" has no products', $bundle->getName()));
+        }
+
+        $firstBundleProduct = $bundleProducts->first();
+        if ($firstBundleProduct === null) {
+            throw new \RuntimeException(sprintf('Bundle "%s" has no products', $bundle->getName()));
+        }
+
+        $firstBundleProductDeliveryTime = $firstBundleProduct->getDeliveryTime();
+        if ($firstBundleProductDeliveryTime === null) {
+            throw new \RuntimeException(sprintf('First product of bundle "%s" has no delivery time', $bundle->getName()));
+        }
+
         $bundleLineItem->setRemovable(true)
             ->setStackable(true)
             ->setDeliveryInformation(
                 new DeliveryInformation(
-                    (int)$bundle->getProducts()->first()->getStock(),
-                    (float)$bundle->getProducts()->first()->getWeight(),
-                    $bundle->getProducts()->first()->getShippingFree(),
-                    $bundle->getProducts()->first()->getRestockTime(),
-                    $bundle->getProducts()->first()->getDeliveryTime()
+                    (int) $firstBundleProduct->getStock(),
+                    (float) $firstBundleProduct->getWeight(),
+                    (bool) $firstBundleProduct->getShippingFree(),
+                    $firstBundleProduct->getRestockTime(),
+                    DeliveryTime::createFromEntity($firstBundleProductDeliveryTime)
                 )
             )
             ->setQuantityInformation(new QuantityInformation());
@@ -170,7 +185,12 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
     private function addMissingProducts(LineItem $bundleLineItem, BundleEntity $bundle): void
     {
-        foreach ($bundle->getProducts()->getIds() as $productId) {
+        $bundleProducts = $bundle->getProducts();
+        if ($bundleProducts === null) {
+            throw new \RuntimeException(sprintf('Bundle %s has no products', $bundle->getName()));
+        }
+
+        foreach ($bundleProducts->getIds() as $productId) {
             // if the bundleLineItem already contains the product we can skip it
             if ($bundleLineItem->getChildren()->has($productId)) {
                 continue;
@@ -203,7 +223,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
     private function createDiscount(BundleEntity $bundleData, SalesChannelContext $context): ?LineItem
     {
-        if ($bundleData->getDiscount() === 0) {
+        if ($bundleData->getDiscount() === 0.0) {
             return null;
         }
 
@@ -237,10 +257,10 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
     private function calculateChildProductPrices(LineItem $bundleLineItem, SalesChannelContext $context): void
     {
+        /** @var LineItemCollection $products */
         $products = $bundleLineItem->getChildren()->filterType(LineItem::PRODUCT_LINE_ITEM_TYPE);
 
         foreach ($products as $product) {
-            /** @var QuantityPriceDefinition $priceDefinition */
             $priceDefinition = $product->getPriceDefinition();
 
             $product->setPrice(
