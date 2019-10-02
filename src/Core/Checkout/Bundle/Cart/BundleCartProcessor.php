@@ -17,6 +17,7 @@ use Shopware\Core\Checkout\Cart\Price\PercentagePriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\QuantityPriceCalculator;
 use Shopware\Core\Checkout\Cart\Price\Struct\AbsolutePriceDefinition;
 use Shopware\Core\Checkout\Cart\Price\Struct\PercentagePriceDefinition;
+use Shopware\Core\Checkout\Cart\Price\Struct\QuantityPriceDefinition;
 use Shopware\Core\Framework\DataAbstractionLayer\EntityRepositoryInterface;
 use Shopware\Core\Framework\DataAbstractionLayer\Search\Criteria;
 use Shopware\Core\System\SalesChannel\SalesChannelContext;
@@ -76,7 +77,6 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         // fetch missing bundle information from database
         $bundles = $this->fetchBundles($bundleLineItems, $data, $context);
 
-        /** @var BundleEntity $bundle */
         foreach ($bundles as $bundle) {
             // ensure all line items have a data entry
             $data->set(self::DATA_KEY . $bundle->getId(), $bundle);
@@ -99,6 +99,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
     {
         // collect all bundle in cart
+        /** @var LineItemCollection $bundleLineItems */
         $bundleLineItems = $original->getLineItems()
             ->filterType(self::TYPE);
 
@@ -173,7 +174,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
             ->setStackable(true)
             ->setDeliveryInformation(
                 new DeliveryInformation(
-                    (int) $firstBundleProduct->getStock(),
+                    $firstBundleProduct->getStock(),
                     (float) $firstBundleProduct->getWeight(),
                     (bool) $firstBundleProduct->getShippingFree(),
                     $firstBundleProduct->getRestockTime(),
@@ -262,6 +263,9 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
         foreach ($products as $product) {
             $priceDefinition = $product->getPriceDefinition();
+            if ($priceDefinition === null || !$priceDefinition instanceof QuantityPriceDefinition) {
+                throw new \RuntimeException(sprintf('Product "%s" has invalid price definition', $product->getLabel()));
+            }
 
             $product->setPrice(
                 $this->quantityPriceCalculator->calculate($priceDefinition, $context)

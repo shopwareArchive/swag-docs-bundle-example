@@ -20,10 +20,9 @@ class CartContainsBundleRule extends Rule
             return false;
         }
 
-        $cart = $scope->getCart();
-        $bundles = $cart->getLineItems()->filterFlatByType(BundleCartProcessor::TYPE);
+        $bundles = $scope->getCart()->getLineItems()->filterFlatByType(BundleCartProcessor::TYPE);
 
-        if (count($bundles) < 1) {
+        if (\count($bundles) < 1) {
             return false;
         }
 

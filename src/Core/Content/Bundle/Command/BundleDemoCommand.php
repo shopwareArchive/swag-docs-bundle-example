@@ -39,7 +39,7 @@ class BundleDemoCommand extends Command
         $this->setName('bundle:demo');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): ?int
     {
         $io = new SymfonyStyle($input, $output);
         $context = Context::createDefaultContext();
