@@ -53,6 +53,11 @@ class Migration1554708925Bundle extends MigrationStep
                 REFERENCES `product` (`id`, `version_id`) ON DELETE CASCADE ON UPDATE CASCADE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
+
+        $connection->executeQuery('
+            ALTER TABLE `product`
+            ADD COLUMN `bundles` BINARY(16) DEFAULT NULL AFTER `translations`;
+        ');
     }
 
     public function updateDestructive(Connection $connection): void
