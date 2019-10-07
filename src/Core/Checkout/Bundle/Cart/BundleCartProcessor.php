@@ -166,8 +166,8 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
         }
 
         $firstBundleProductDeliveryTime = $firstBundleProduct->getDeliveryTime();
-        if ($firstBundleProductDeliveryTime === null) {
-            throw new \RuntimeException(sprintf('First product of bundle "%s" has no delivery time', $bundle->getName()));
+        if ($firstBundleProductDeliveryTime !== null) {
+            $firstBundleProductDeliveryTime = DeliveryTime::createFromEntity($firstBundleProductDeliveryTime);
         }
 
         $bundleLineItem->setRemovable(true)
@@ -178,7 +178,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
                     (float) $firstBundleProduct->getWeight(),
                     (bool) $firstBundleProduct->getShippingFree(),
                     $firstBundleProduct->getRestockTime(),
-                    DeliveryTime::createFromEntity($firstBundleProductDeliveryTime)
+                    $firstBundleProductDeliveryTime
                 )
             )
             ->setQuantityInformation(new QuantityInformation());
