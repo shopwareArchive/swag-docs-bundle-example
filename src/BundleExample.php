@@ -21,5 +21,6 @@ class BundleExample extends Plugin
         $connection->executeQuery('DROP TABLE IF EXISTS `swag_bundle_product`');
         $connection->executeQuery('DROP TABLE IF EXISTS `swag_bundle_translation`');
         $connection->executeQuery('DROP TABLE IF EXISTS `swag_bundle`');
+        $connection->executeQuery('ALTER TABLE `product` DROP COLUMN `bundles`');
     }
 }
