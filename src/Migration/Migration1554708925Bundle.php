@@ -3,10 +3,13 @@
 namespace Swag\BundleExample\Migration;
 
 use Doctrine\DBAL\Connection;
+use Shopware\Core\Framework\Migration\InheritanceUpdaterTrait;
 use Shopware\Core\Framework\Migration\MigrationStep;
 
 class Migration1554708925Bundle extends MigrationStep
 {
+    use InheritanceUpdaterTrait;
+
     public function getCreationTimestamp(): int
     {
         return 1554708925;
@@ -54,10 +57,7 @@ class Migration1554708925Bundle extends MigrationStep
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ');
 
-        $connection->executeQuery('
-            ALTER TABLE `product`
-            ADD COLUMN `bundles` BINARY(16) DEFAULT NULL AFTER `translations`;
-        ');
+        $this->updateInheritance($connection, 'product', 'bundles');
     }
 
     public function updateDestructive(Connection $connection): void
