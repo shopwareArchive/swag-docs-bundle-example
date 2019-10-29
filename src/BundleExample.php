@@ -12,7 +12,7 @@ class BundleExample extends Plugin
 {
     public function activate(ActivateContext $activateContext): void
     {
-        $indexerMessageSender = $activateContext->getPlugin()->container->get(IndexerMessageSender::class);
+        $indexerMessageSender = $this->container->get(IndexerMessageSender::class);
         $indexerMessageSender->partial(new \DateTimeImmutable(), ['Swag.InheritanceIndexer']);
     }
 
