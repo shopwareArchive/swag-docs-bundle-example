@@ -3,11 +3,19 @@
 namespace Swag\BundleExample;
 
 use Doctrine\DBAL\Connection;
+use Shopware\Core\Framework\DataAbstractionLayer\Indexing\MessageQueue\IndexerMessageSender;
 use Shopware\Core\Framework\Plugin;
+use Shopware\Core\Framework\Plugin\Context\ActivateContext;
 use Shopware\Core\Framework\Plugin\Context\UninstallContext;
 
 class BundleExample extends Plugin
 {
+    public function activate(ActivateContext $activateContext): void
+    {
+        $indexerMessageSender = $activateContext->getPlugin()->container->get(IndexerMessageSender::class);
+        $indexerMessageSender->partial(new \DateTimeImmutable(), ['Swag.InheritanceIndexer']);
+    }
+
     public function uninstall(UninstallContext $context): void
     {
         parent::uninstall($context);
