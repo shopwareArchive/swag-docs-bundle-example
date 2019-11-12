@@ -7,7 +7,7 @@ Component.register('swag-bundle-detail', {
 
     inject: [
         'repositoryFactory',
-        'context'
+        'apiContext'
     ],
 
     mixins: [
@@ -46,7 +46,7 @@ Component.register('swag-bundle-detail', {
     methods: {
         getBundle() {
             this.repository
-                .get(this.$route.params.id, this.context)
+                .get(this.$route.params.id, this.apiContext)
                 .then((entity) => {
                     this.bundle = entity;
                 });
@@ -56,7 +56,7 @@ Component.register('swag-bundle-detail', {
             this.isLoading = true;
 
             this.repository
-                .save(this.bundle, this.context)
+                .save(this.bundle, this.apiContext)
                 .then(() => {
                     this.getBundle();
                     this.isLoading = false;
