@@ -8,7 +8,7 @@ Component.register('swag-bundle-list', {
 
     inject: [
         'repositoryFactory',
-        'context'
+        'apiContext'
     ],
 
     data() {
@@ -53,7 +53,7 @@ Component.register('swag-bundle-list', {
         this.repository = this.repositoryFactory.create('swag_bundle');
 
         this.repository
-            .search(new Criteria(), this.context)
+            .search(new Criteria(), this.apiContext)
             .then((result) => {
                 this.bundles = result;
             });

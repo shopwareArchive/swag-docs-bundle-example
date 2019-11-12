@@ -3,14 +3,14 @@ const { Component } = Shopware;
 Component.extend('swag-bundle-create', 'swag-bundle-detail', {
     methods: {
         getBundle() {
-            this.bundle = this.repository.create(this.context);
+            this.bundle = this.repository.create(this.apiContext);
         },
 
         onClickSave() {
             this.isLoading = true;
 
             this.repository
-                .save(this.bundle, this.context)
+                .save(this.bundle, this.apiContext)
                 .then(() => {
                     this.isLoading = false;
                     this.$router.push({ name: 'swag.bundle.detail', params: { id: this.bundle.id } });
