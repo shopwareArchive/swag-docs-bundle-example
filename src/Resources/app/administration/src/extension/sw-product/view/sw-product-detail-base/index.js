@@ -14,7 +14,7 @@ Component.override('sw-product-detail-base', {
     methods: {
         saveProduct() {
             if (this.product) {
-                this.productRepository.save(this.product, this.apiContext);
+                this.productRepository.save(this.product, Shopware.Context.api);
             }
         }
     }
