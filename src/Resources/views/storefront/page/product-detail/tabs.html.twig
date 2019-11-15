@@ -1,4 +1,4 @@
-{% sw_extends '@Storefront/page/product-detail/tabs.html.twig' %}
+{% sw_extends '@Storefront/storefront/page/product-detail/tabs.html.twig' %}
 
 {% block page_product_detail_tabs_navigation_description %}
     {{ parent() }}
@@ -26,7 +26,7 @@
                     <div class="row">
                         {% for product in bundle.products.elements %}
                             <div class="col-4">
-                                {% sw_include '@Storefront/component/product/card/box-standard.html.twig' with {'product': product} %}
+                                {% sw_include '@Storefront/storefront/component/product/card/box-standard.html.twig' with {'product': product} %}
                             </div>
                         {% endfor %}
                     </div>
