@@ -10,7 +10,7 @@ use Shopware\Core\Framework\DataAbstractionLayer\FieldCollection;
 use Swag\BundleExample\Core\Content\Bundle\Aggregate\BundleProduct\BundleProductDefinition;
 use Swag\BundleExample\Core\Content\Bundle\BundleDefinition;
 
-class ProductExtension implements EntityExtension
+class ProductExtension extends EntityExtension
 {
     public function extendFields(FieldCollection $collection): void
     {
