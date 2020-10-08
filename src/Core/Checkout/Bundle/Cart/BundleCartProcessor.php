@@ -152,17 +152,17 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
     private function enrichBundle(LineItem $bundleLineItem, BundleEntity $bundle): void
     {
         if (!$bundleLineItem->getLabel()) {
-            $bundleLineItem->setLabel($bundle->getName());
+            $bundleLineItem->setLabel($bundle->getTranslation('name'));
         }
 
         $bundleProducts = $bundle->getProducts();
         if ($bundleProducts === null) {
-            throw new \RuntimeException(sprintf('Bundle "%s" has no products', $bundle->getName()));
+            throw new \RuntimeException(sprintf('Bundle "%s" has no products', $bundle->getTranslation('name')));
         }
 
         $firstBundleProduct = $bundleProducts->first();
         if ($firstBundleProduct === null) {
-            throw new \RuntimeException(sprintf('Bundle "%s" has no products', $bundle->getName()));
+            throw new \RuntimeException(sprintf('Bundle "%s" has no products', $bundle->getTranslation('name')));
         }
 
         $firstBundleProductDeliveryTime = $firstBundleProduct->getDeliveryTime();
@@ -188,7 +188,7 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
     {
         $bundleProducts = $bundle->getProducts();
         if ($bundleProducts === null) {
-            throw new \RuntimeException(sprintf('Bundle %s has no products', $bundle->getName()));
+            throw new \RuntimeException(sprintf('Bundle %s has no products', $bundle->getTranslation('name')));
         }
 
         foreach ($bundleProducts->getIds() as $productId) {
