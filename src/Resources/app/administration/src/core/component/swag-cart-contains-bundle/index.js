@@ -1,4 +1,4 @@
-import template from './swag-cart-contains-bundle.tml.twig';
+import template from './swag-cart-contains-bundle.html.twig';
 
 const { Component } = Shopware;
 
