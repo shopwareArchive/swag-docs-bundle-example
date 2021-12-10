@@ -1,12 +1,12 @@
 {% block sw_product_detail_attribute_sets %}
     {% parent() %}
-    <sw-card :title="$t('sw-product.detail.bundleCardLabel')"
+    <sw-card :title="$tc('sw-product.detail.bundleCardLabel')"
              :isLoading="isLoading">
         <sw-inherit-wrapper v-if="!isLoading"
                             v-model="product.extensions.bundles"
                             :inheritedValue="parentProduct.extensions ? parentProduct.extensions.bundles : null"
                             :hasParent="!!parentProduct.id"
-                            :label="$t('sw-product.detail.bundleSelectLabel')"
+                            :label="$tc('sw-product.detail.bundleSelectLabel')"
                             isAssociation
                             @inheritance-remove="saveProduct"
                             @inheritance-restore="saveProduct">
@@ -18,7 +18,7 @@
                     labelProperty="name"
                     :disabled="isInherited"
                     :key="isInherited"
-                    :placeholder="$t('sw-product.detail.bundleSelectPlaceholder')">
+                    :placeholder="$tc('sw-product.detail.bundleSelectPlaceholder')">
                 </sw-entity-many-to-many-select>
             </template>
         </sw-inherit-wrapper>
