@@ -1,7 +1,7 @@
 {
     "swag-bundle": {
         "general": {
-            "mainMenuItemGeneral": "Bundle",
+            "mainMenuItemGeneral": "Bundles",
             "descriptionTextModule": "Manage bundles here"
         },
         "list": {

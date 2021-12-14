@@ -11,7 +11,7 @@ Module.register('swag-bundle', {
     name: 'Bundle',
     title: 'swag-bundle.general.mainMenuItemGeneral',
     description: 'sw-property.general.descriptionTextModule',
-    color: '#ff3d58',
+    color: '#FFD700',
     icon: 'default-shopping-paper-bag-product',
 
     snippets: {
@@ -41,9 +41,10 @@ Module.register('swag-bundle', {
     },
 
     navigation: [{
-        label: 'swag-bundle.general.mainMenuItemGeneral',
-        color: '#ff3d58',
+        id: 'swag-bundle-example',
         path: 'swag.bundle.list',
+        parent: 'sw-marketing',
+        label: 'swag-bundle.general.mainMenuItemGeneral',
         icon: 'default-shopping-paper-bag-product',
         position: 100
     }]
