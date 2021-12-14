@@ -66,7 +66,6 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
     public function collect(CartDataCollection $data, Cart $original, SalesChannelContext $context, CartBehavior $behavior): void
     {
-        /** @var LineItemCollection $bundleLineItems */
         $bundleLineItems = $original->getLineItems()->filterType(self::TYPE);
 
         // no bundles in cart? exit
@@ -99,7 +98,6 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
     public function process(CartDataCollection $data, Cart $original, Cart $toCalculate, SalesChannelContext $context, CartBehavior $behavior): void
     {
         // collect all bundle in cart
-        /** @var LineItemCollection $bundleLineItems */
         $bundleLineItems = $original->getLineItems()
             ->filterType(self::TYPE);
 
@@ -230,12 +228,12 @@ class BundleCartProcessor implements CartProcessorInterface, CartDataCollectorIn
 
         switch ($bundleData->getDiscountType()) {
             case self::DISCOUNT_TYPE_ABSOLUTE:
-                $priceDefinition = new AbsolutePriceDefinition($bundleData->getDiscount() * -1, $context->getContext()->getCurrencyPrecision());
+                $priceDefinition = new AbsolutePriceDefinition($bundleData->getDiscount() * -1);
                 $label = 'Absolute bundle voucher';
                 break;
 
             case self::DISCOUNT_TYPE_PERCENTAGE:
-                $priceDefinition = new PercentagePriceDefinition($bundleData->getDiscount() * -1, $context->getContext()->getCurrencyPrecision());
+                $priceDefinition = new PercentagePriceDefinition($bundleData->getDiscount() * -1);
                 $label = sprintf('Percental bundle voucher (%s%%)', $bundleData->getDiscount());
                 break;
 
